@@ -11,22 +11,21 @@ public class BaseControl {
 	// 数值或者状态
 	public int value = 0;
 	public Bluetooth bt = null;
-	public Bluetooth bt2 = null;
 	
 	public BaseControl() {
 
 	}
 
 	public void setPikType(String mac, int setPik, int setType) {
-		if (mac != bluetoothMac) {
+		pik = setPik;
+		type = setType;
+		if (mac != bluetoothMac || bt == null) {
 			bluetoothMac = mac;
 			if (bt != null) {
 				bt.release();
 			}
 			bt = new Bluetooth(bluetoothMac);
 		}
-		pik = setPik;
-		type = setType;
 	}
 
 	public void open() {

@@ -1,7 +1,5 @@
 package com.centurywar.intelligent;
 
-import java.util.Random;
-
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -68,7 +66,7 @@ public class MainActivity extends BaseActivity {
 				openBluetooth();
 			}
 		});
-		
+		bc = new BaseControl();
 		updateword();
 	}
 
@@ -131,16 +129,17 @@ public class MainActivity extends BaseActivity {
 	private void setControl(int getstatus) {
 		int pik = getstatus / 10;
 		int type = 10;
-		Random rd = new Random();
-		int i = rd.nextInt() % 2;
+		// Random rd = new Random();
+		// int i = rd.nextInt() % 2;
 		String mac = "20:13:09:30:12:77";
-		if (i == 1) {
-			mac = "20:13:09:30:14:48";
-		}
+		// if (i == 1) {
+			// mac = "20:13:09:30:14:48";
+		// }
 		boolean status = false;
 		if (getstatus % 10 == 1) {
 			status = true;
 		}
+
 		bc.setPikType(mac, pik, type);
 		if (status) {
 			bc.open();
@@ -156,7 +155,7 @@ public class MainActivity extends BaseActivity {
 			btnBlue.setVisibility(View.GONE);
 		} else {
 			txtError.setVisibility(View.VISIBLE);
-			btnBlue.setVisibility(View.VISIBLE);
+			btnBlue.setVisibility(View.GONE);
 			txtError.setText("Î´¿ªÆôÀ¶ÑÀ");
 		}
 	}
