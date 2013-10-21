@@ -11,28 +11,29 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 
-public class Bluetooth {
+public class Bluetooth extends BaseActivity {
 	private Set<BluetoothDevice> pairedDevices;
 	private static BluetoothAdapter mBluetoothAdapter = null;
 	private ConnectThread mChatService = null;
 	private ConnectedThread mConnectedThread;
 	private BluetoothSocket mmSocket;
 
-	public Bluetooth(String name) {
+	public Bluetooth(String mac) {
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		// 搜索到已经配对的设备
 		pairedDevices = mBluetoothAdapter.getBondedDevices();
 		if (pairedDevices.size() > 0) {
-			String tem = "";
 			for (BluetoothDevice device : pairedDevices) {
-				tem = tem + device.getName() + " " + device.getAddress() + "\n";
-				if (device.getName().equals(name)) {
+				if (device.getAddress().equals(mac)) {
 					mChatService = new ConnectThread(device);
 					mChatService.run();
+					return;
 				}
 			}
 		}
+
 	}
+
 
 	private class ConnectThread extends Thread {
 		public ConnectThread(BluetoothDevice device) {
@@ -136,7 +137,6 @@ public class Bluetooth {
 	public void ContentWrite(String str) {
 		if (mConnectedThread != null) {
 			mConnectedThread.write(str.getBytes());
-			mConnectedThread.cancel();
 		}
 	}
 

@@ -41,7 +41,7 @@ public class MyReceiver extends BroadcastReceiver {
 			String tem = "接收到推送下来的自定义消息: "
 					+ bundle.getString(JPushInterface.EXTRA_MESSAGE);
 
-			Bluetooth bt = new Bluetooth("HC-06");
+			Bluetooth bt = new Bluetooth("20:13:09:30:12:77");
 			bt.ContentWrite(tem);
 
 			

@@ -1,5 +1,9 @@
 package com.centurywar.intelligent;
 
+import java.util.Random;
+
+import android.bluetooth.BluetoothAdapter;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,6 +21,9 @@ public class MainActivity extends BaseActivity {
 	private EditText editName;
 	private EditText editPik;
 	private TableLayout table;
+	private BaseControl bc;
+	private TextView txtError;
+	private Button btnBlue;
 	protected SharedPreferences gameInfo;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +34,8 @@ public class MainActivity extends BaseActivity {
 		editName = (EditText) findViewById(R.id.editName);
 		editPik = (EditText) findViewById(R.id.editPik);
 		table = (TableLayout) findViewById(R.id.layoutBtn);
-
+		txtError = (TextView) findViewById(R.id.txtError);
+		btnBlue = (Button) findViewById(R.id.btnBlue);
 		gameInfo = getSharedPreferences("gameInfo", 0);
 		btnClear.setOnClickListener(new Button.OnClickListener() {
 			@Override
@@ -54,8 +62,19 @@ public class MainActivity extends BaseActivity {
 				updateword();
 			}
 		});
-
+		btnBlue.setOnClickListener(new Button.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				openBluetooth();
+			}
+		});
+		
 		updateword();
+	}
+
+	private void openBluetooth(){
+		Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+		startActivity(intent);
 	}
 
 	private void updateword() {
@@ -100,6 +119,7 @@ public class MainActivity extends BaseActivity {
 		}
 	}
 
+
 	// 接受时间
 	Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
@@ -111,16 +131,41 @@ public class MainActivity extends BaseActivity {
 	private void setControl(int getstatus) {
 		int pik = getstatus / 10;
 		int type = 10;
+		Random rd = new Random();
+		int i = rd.nextInt() % 2;
+		String mac = "20:13:09:30:12:77";
+		if (i == 1) {
+			mac = "20:13:09:30:14:48";
+		}
 		boolean status = false;
 		if (getstatus % 10 == 1) {
 			status = true;
 		}
-		BaseControl bc = new BaseControl(pik, type);
+		bc.setPikType(mac, pik, type);
 		if (status) {
 			bc.open();
 		} else {
 			bc.close();
 		}
 	}
+
+	public void onResume() {
+		super.onResume();
+		if (checkBluetooth()) {
+			txtError.setVisibility(View.GONE);
+			btnBlue.setVisibility(View.GONE);
+		} else {
+			txtError.setVisibility(View.VISIBLE);
+			btnBlue.setVisibility(View.VISIBLE);
+			txtError.setText("未开启蓝牙");
+		}
+	}
+
+
+	public void onPause() {
+		super.onPause();
+		bc.release();
+	}
+
 }
 

@@ -17,5 +17,5 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
     <color name="writw">#ffffff</color>
-
+ <color name="red">#ff0000</color>
 </resources>

@@ -4,28 +4,45 @@ package com.centurywar.intelligent;
 public class BaseControl {
 	public int pik = 0;
 	public int type = 10;
-	public String bluetoothName = "HC-06";
+
+	// static public String bluetoothMac = "20:13:09:30:12:77";
+	static public String bluetoothMac = "";
+	// public String bluetoothMac2 = "20:13:09:30:14:48";
 	// 数值或者状态
 	public int value = 0;
+	public Bluetooth bt = null;
+	public Bluetooth bt2 = null;
+	
+	public BaseControl() {
 
-	public BaseControl(int setPik, int setType) {
+	}
+
+	public void setPikType(String mac, int setPik, int setType) {
+		if (mac != bluetoothMac) {
+			bluetoothMac = mac;
+			if (bt != null) {
+				bt.release();
+			}
+			bt = new Bluetooth(bluetoothMac);
+		}
 		pik = setPik;
 		type = setType;
 	}
 
 	public void open() {
-		Bluetooth bt = new Bluetooth(bluetoothName);
 		bt.ContentWrite(type + "_" + pik + "_1_0");
-		bt.release();
 	}
 
 	public void close() {
-		Bluetooth bt = new Bluetooth(bluetoothName);
 		bt.ContentWrite(type + "_" + pik + "_0_0");
-		bt.release();
 	}
 
 	public int status() {
 		return value;
+	}
+
+	public void release() {
+		bt.release();
+		bt = null;
 	}
 }
