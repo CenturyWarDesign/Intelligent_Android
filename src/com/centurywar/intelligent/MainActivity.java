@@ -9,6 +9,8 @@ import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -20,9 +22,12 @@ public class MainActivity extends BaseActivity {
 	private EditText editPik;
 	private TableLayout table;
 	private BaseControl bc;
+	private LightControl bl;
 	private TextView txtError;
-	private Button btnBlue;
+	private TextView lightRate;
+	private SeekBar lightBar;
 	protected SharedPreferences gameInfo;
+	private int maxlight = 255, currentlight = 0;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -33,8 +38,9 @@ public class MainActivity extends BaseActivity {
 		editPik = (EditText) findViewById(R.id.editPik);
 		table = (TableLayout) findViewById(R.id.layoutBtn);
 		txtError = (TextView) findViewById(R.id.txtError);
-		btnBlue = (Button) findViewById(R.id.btnBlue);
+		lightRate = (TextView) findViewById(R.id.lightRate);
 		gameInfo = getSharedPreferences("gameInfo", 0);
+		lightBar = (SeekBar) findViewById(R.id.lightBar);
 		btnClear.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -60,14 +66,37 @@ public class MainActivity extends BaseActivity {
 				updateword();
 			}
 		});
-		btnBlue.setOnClickListener(new Button.OnClickListener() {
+		bc = new BaseControl();
+		bl = new LightControl();
+		updateword();
+
+
+
+		lightBar.setMax(maxlight);
+		lightBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+			public void onProgressChanged(SeekBar arg0, int progress,
+					boolean fromUser) {
+				currentlight = progress;
+				lightBar.setProgress(currentlight);
+				lightRate.setText(currentlight * 100 / maxlight + " %");
+					String mac = "20:13:09:30:12:77";
+					bl.setPikType(mac, 11, 20);
+					bl.setValue(currentlight);
+			}
+
 			@Override
-			public void onClick(View v) {
-				openBluetooth();
+			public void onStartTrackingTouch(SeekBar seekBar) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				// TODO Auto-generated method stub
+
 			}
 		});
-		bc = new BaseControl();
-		updateword();
+
 	}
 
 	private void openBluetooth(){
@@ -152,10 +181,10 @@ public class MainActivity extends BaseActivity {
 		super.onResume();
 		if (checkBluetooth()) {
 			txtError.setVisibility(View.GONE);
-			btnBlue.setVisibility(View.GONE);
+			// btnBlue.setVisibility(View.GONE);
 		} else {
 			txtError.setVisibility(View.VISIBLE);
-			btnBlue.setVisibility(View.GONE);
+			// btnBlue.setVisibility(View.GONE);
 			txtError.setText("Î´¿ªÆôÀ¶ÑÀ");
 		}
 	}

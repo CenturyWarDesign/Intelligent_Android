@@ -13,13 +13,6 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/red" />
 
-    <Button
-        android:id="@+id/btnBlue"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="打开" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
@@ -33,8 +26,7 @@
         <EditText
             android:id="@+id/editName"
             android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            />
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/textView1"
@@ -44,13 +36,19 @@
 
         <EditText
             android:id="@+id/editPik"
-            android:layout_width="30dp"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
-             android:inputType="number"
-            android:ems="10" >
-
+            android:ems="10"
+            android:inputType="number" >
             <requestFocus />
         </EditText>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
 
         <Button
             android:id="@+id/btnAdd"
@@ -65,7 +63,6 @@
             android:layout_height="50dp"
             android:text="清空"
             android:textSize="@dimen/small" />
-
     </LinearLayout>
 
     <TableLayout
@@ -74,4 +71,20 @@
         android:layout_height="wrap_content" >
     </TableLayout>
 
+    <LinearLayout
+        android:id="@+id/t"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <SeekBar
+            android:id="@+id/lightBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/lightRate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0%" />
 </LinearLayout>
