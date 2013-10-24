@@ -15,8 +15,8 @@ public class Bluetooth extends BaseActivity {
 	private Set<BluetoothDevice> pairedDevices;
 	private static BluetoothAdapter mBluetoothAdapter = null;
 	private ConnectThread mChatService = null;
-	private ConnectedThread mConnectedThread;
-	private BluetoothSocket mmSocket;
+	private ConnectedThread mConnectedThread = null;
+	private BluetoothSocket mmSocket = null;
 
 	public Bluetooth(String mac) {
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -33,7 +33,6 @@ public class Bluetooth extends BaseActivity {
 		}
 
 	}
-
 
 	private class ConnectThread extends Thread {
 		public ConnectThread(BluetoothDevice device) {
@@ -140,6 +139,19 @@ public class Bluetooth extends BaseActivity {
 		}
 	}
 
+	public boolean getStatus() {
+		if (mConnectedThread == null) {
+			return false;
+		}
+		if (mChatService == null) {
+			return false;
+		}
+		if (mmSocket == null) {
+			return false;
+		}
+		return mmSocket.isConnected();
+	}
+
 	public void release() {
 		mConnectedThread = null;
 		try {
@@ -147,7 +159,6 @@ public class Bluetooth extends BaseActivity {
 		} catch (IOException closeException) {
 			closeException.printStackTrace();
 		}
-
 		mChatService = null;
 	}
 }

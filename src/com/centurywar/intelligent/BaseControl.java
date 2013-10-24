@@ -10,7 +10,7 @@ public class BaseControl {
 	// public String bluetoothMac2 = "20:13:09:30:14:48";
 	// 数值或者状态
 	public int value = 0;
-	public Bluetooth bt = null;
+	public static Bluetooth bt = null;
 	
 	public BaseControl() {
 
@@ -19,7 +19,7 @@ public class BaseControl {
 	public void setPikType(String mac, int setPik, int setType) {
 		pik = setPik;
 		type = setType;
-		if (mac != bluetoothMac || bt == null) {
+		if (mac != bluetoothMac || !bt.getStatus() || bt == null) {
 			bluetoothMac = mac;
 			if (bt != null) {
 				bt.release();

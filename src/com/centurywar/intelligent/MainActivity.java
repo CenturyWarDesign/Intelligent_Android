@@ -18,6 +18,7 @@ import android.widget.TextView;
 public class MainActivity extends BaseActivity {
 	private Button btnAdd;
 	private Button btnClear;
+	private Button btnGame1;
 	private EditText editName;
 	private EditText editPik;
 	private TableLayout table;
@@ -28,11 +29,14 @@ public class MainActivity extends BaseActivity {
 	private SeekBar lightBar;
 	protected SharedPreferences gameInfo;
 	private int maxlight = 255, currentlight = 0;
+	private String mac = "20:13:09:30:14:48";
+	private String mac2 = "20:13:09:30:12:77";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		btnAdd = (Button) findViewById(R.id.btnAdd);
+		btnGame1 = (Button) findViewById(R.id.btngame1);
 		btnClear = (Button) findViewById(R.id.btnClear);
 		editName = (EditText) findViewById(R.id.editName);
 		editPik = (EditText) findViewById(R.id.editPik);
@@ -46,6 +50,14 @@ public class MainActivity extends BaseActivity {
 			public void onClick(View v) {
 				gameInfo.edit().putString("user_setting", "").commit();
 				updateword();
+			}
+		});
+		btnGame1.setOnClickListener(new Button.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				gameInfo.edit().putString("user_setting", "").commit();
+				bl.setPikType(mac, 3, 20);
+				bl.StartLem1();
 			}
 		});
 		btnAdd.setOnClickListener(new Button.OnClickListener() {
@@ -79,9 +91,9 @@ public class MainActivity extends BaseActivity {
 				currentlight = progress;
 				lightBar.setProgress(currentlight);
 				lightRate.setText(currentlight * 100 / maxlight + " %");
-					String mac = "20:13:09:30:12:77";
-					bl.setPikType(mac, 11, 20);
-					bl.setValue(currentlight);
+				bl.setPikType(mac, 3, 20);
+				// bl.StartLem1();
+				bl.setValue(currentlight);
 			}
 
 			@Override
@@ -160,9 +172,8 @@ public class MainActivity extends BaseActivity {
 		int type = 10;
 		// Random rd = new Random();
 		// int i = rd.nextInt() % 2;
-		String mac = "20:13:09:30:12:77";
+
 		// if (i == 1) {
-			// mac = "20:13:09:30:14:48";
 		// }
 		boolean status = false;
 		if (getstatus % 10 == 1) {
