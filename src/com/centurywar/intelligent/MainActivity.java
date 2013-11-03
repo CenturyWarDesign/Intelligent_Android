@@ -1,11 +1,18 @@
 package com.centurywar.intelligent;
 
-import android.bluetooth.BluetoothAdapter;
-import android.content.Intent;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
+import HA.Socket.SocketClient;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,7 +26,10 @@ public class MainActivity extends BaseActivity {
 	private Button btnAdd;
 	private Button btnClear;
 	private Button btnGame1;
+	private Button btnSocket;
+	private Button btnSocketSend;
 	private EditText editName;
+	private TextView txtSocket;
 	private EditText editPik;
 	private TableLayout table;
 	private BaseControl bc;
@@ -31,6 +41,7 @@ public class MainActivity extends BaseActivity {
 	private int maxlight = 255, currentlight = 0;
 	private String mac = "20:13:09:30:14:48";
 	private String mac2 = "20:13:09:30:12:77";
+	private BaseControl tembc;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -38,13 +49,17 @@ public class MainActivity extends BaseActivity {
 		btnAdd = (Button) findViewById(R.id.btnAdd);
 		btnGame1 = (Button) findViewById(R.id.btngame1);
 		btnClear = (Button) findViewById(R.id.btnClear);
+		btnSocket = (Button) findViewById(R.id.btnSocket);
+		btnSocketSend = (Button) findViewById(R.id.btnSocketSend);
 		editName = (EditText) findViewById(R.id.editName);
 		editPik = (EditText) findViewById(R.id.editPik);
 		table = (TableLayout) findViewById(R.id.layoutBtn);
 		txtError = (TextView) findViewById(R.id.txtError);
+		txtSocket = (TextView) findViewById(R.id.txtSocket);
 		lightRate = (TextView) findViewById(R.id.lightRate);
 		gameInfo = getSharedPreferences("gameInfo", 0);
 		lightBar = (SeekBar) findViewById(R.id.lightBar);
+		tembc=new BaseControl();
 		btnClear.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -60,6 +75,22 @@ public class MainActivity extends BaseActivity {
 				bl.StartLem1();
 			}
 		});
+		
+		btnSocket.setOnClickListener(new Button.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				tembc.initSocket();
+				txtSocket.setText("初始化Socket成功");
+			}
+		});
+		
+		btnSocketSend.setOnClickListener(new Button.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				tembc.sendToDevice("10_1_1_0");
+			}
+		});
+
 		btnAdd.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -78,12 +109,8 @@ public class MainActivity extends BaseActivity {
 				updateword();
 			}
 		});
-		bc = new BaseControl();
-		bl = new LightControl();
+
 		updateword();
-
-
-
 		lightBar.setMax(maxlight);
 		lightBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			public void onProgressChanged(SeekBar arg0, int progress,
@@ -111,10 +138,6 @@ public class MainActivity extends BaseActivity {
 
 	}
 
-	private void openBluetooth(){
-		Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-		startActivity(intent);
-	}
 
 	private void updateword() {
 		String[] userSetting = gameInfo.getString("user_setting", "")
@@ -168,6 +191,12 @@ public class MainActivity extends BaseActivity {
 	};
 
 	private void setControl(int getstatus) {
+		if(tembc==null)
+			return;
+		if(!tembc.getSocketStatus()){
+			tembc.initSocket();
+			return;
+		}
 		int pik = getstatus / 10;
 		int type = 10;
 		// Random rd = new Random();
@@ -180,11 +209,13 @@ public class MainActivity extends BaseActivity {
 			status = true;
 		}
 
-		bc.setPikType(mac, pik, type);
+//		bc.setPikType(mac, pik, type);
 		if (status) {
-			bc.open();
+			tembc.sendToDevice("10_"+pik+"_1_0");
+//			bc.open();
 		} else {
-			bc.close();
+			tembc.sendToDevice("10_"+pik+"_0_0");
+//			bc.close();
 		}
 	}
 
@@ -198,13 +229,29 @@ public class MainActivity extends BaseActivity {
 			// btnBlue.setVisibility(View.GONE);
 			txtError.setText("未开启蓝牙");
 		}
+//		tembc.initSocket();
+		//initBt();
 	}
 
+	public void initBt() {
+		if (bc == null) {
+			bc = new BaseControl();
+		}
+		if (bl == null) {
+			bl = new LightControl();
+		}
+	}
 
 	public void onPause() {
 		super.onPause();
-		bc.release();
+		// bc.release();
+		bc = null;
+		bl = null;
+		tembc.close();
+		finish();
 	}
 
 }
 
+
+	

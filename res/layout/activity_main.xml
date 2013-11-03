@@ -93,5 +93,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="游戏1" />
-
+        <Button
+        android:id="@+id/btnSocket"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Socket" />
+        
+     <TextView
+        android:id="@+id/txtSocket"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0%" />
+     <Button
+        android:id="@+id/btnSocketSend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SocketSend" />
 </LinearLayout>

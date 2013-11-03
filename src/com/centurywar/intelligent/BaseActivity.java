@@ -8,7 +8,6 @@ import android.view.Window;
 import cn.jpush.android.api.JPushInterface;
 
 public class BaseActivity extends Activity {
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
