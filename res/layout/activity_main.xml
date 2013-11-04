@@ -97,7 +97,7 @@
         android:id="@+id/btnSocket"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Socket" />
+        android:text="初始化" />
         
      <TextView
         android:id="@+id/txtSocket"

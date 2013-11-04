@@ -2,6 +2,10 @@ package com.centurywar.intelligent;
 
 import java.net.Socket;
 
+import android.bluetooth.BluetoothAdapter;
+import android.os.Handler;
+import android.os.Message;
+
 import HA.Socket.SocketClient;
 
 //控制基类
@@ -15,21 +19,13 @@ public class BaseControl {
 	// 数值或者状态
 	public int value = 0;
 	public static Bluetooth bt = null;
-	public boolean useBt=false;
-	public BaseControl() {
+	public boolean useBt = true;
 
+	public BaseControl() {
 	}
-	public void initSocket(){
-		if (socket == null||!socket.status()) {
-			socket = new SocketClient();
-		}
-	}
-	public boolean getSocketStatus(){
-		return socket.status();
-	}
-	public void setPikType(String mac, int setPik, int setType) {
-		pik = setPik;
-		type = setType;
+	public BaseControl(String mac) {
+		boolean isBluetooth = false;
+		useBt = checkBluetooth();
 		if (useBt) {
 			if (mac != bluetoothMac || !bt.getStatus() || bt == null) {
 				bluetoothMac = mac;
@@ -37,19 +33,59 @@ public class BaseControl {
 					bt.release();
 				}
 				bt = new Bluetooth(bluetoothMac);
+				isBluetooth = true;
+				handler.sendEmptyMessage(0);
 			}
-		} else {
-			
+		}
+		if (!useBt || !isBluetooth) {
+			initSocket();
+		}
+	}
+	
+
+	public void initSocket() {
+		if (useBt) {
+			return;
+		}
+		if (socket == null || !socket.status()) {
+			socket = new SocketClient();
+		}
+	}
+	public boolean getSocketStatus(){
+		return socket.status();
+	}
+
+	public void setMac(String mac) {
+		boolean isBluetooth = false;
+		if (useBt) {
+			if (mac != bluetoothMac || !bt.getStatus() || bt == null) {
+				bluetoothMac = mac;
+				if (bt != null) {
+					bt.release();
+				}
+				bt = new Bluetooth(bluetoothMac);
+				isBluetooth = true;
+				handler.sendEmptyMessage(0);
+			}
+		}
+		if (!useBt || !isBluetooth) {
+			initSocket();
 		}
 	}
 
-	public void open() {
-		sendToDevice(type + "_" + pik + "_1_0");
-	}
-
-	public void close() {
-		sendToDevice(type + "_" + pik + "_0_0");
-	}
+	private Handler handler = new Handler() {
+		@Override
+		// 当有消息发送出来的时候就执行Handler的这个方法
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			System.out.println("init bluetooth success..");
+			if (bt.getStatus()) {
+				useBt = true;
+			} else {
+				useBt = false;
+			}
+		}
+	};
 
 	public void sendToDevice(String message) {
 		if (useBt) {
@@ -63,6 +99,7 @@ public class BaseControl {
 		return value;
 	}
 
+	
 	public void release() {
 		if (bt != null) {
 			bt.release();
@@ -72,5 +109,10 @@ public class BaseControl {
 			socket.closeSocket();
 			socket = null;
 		}
+	}
+	protected boolean checkBluetooth() {
+		BluetoothAdapter mBluetoothAdapter = BluetoothAdapter
+				.getDefaultAdapter();
+		return mBluetoothAdapter.isEnabled();
 	}
 }

@@ -1,7 +1,9 @@
 package com.centurywar.intelligent;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -10,6 +12,8 @@ import java.util.Set;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.os.Handler;
+import android.os.Message;
 
 public class Bluetooth extends BaseActivity {
 	private Set<BluetoothDevice> pairedDevices;
@@ -19,6 +23,7 @@ public class Bluetooth extends BaseActivity {
 	private BluetoothSocket mmSocket = null;
 
 	public Bluetooth(String mac) {
+		
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		// 搜索到已经配对的设备
 		pairedDevices = mBluetoothAdapter.getBondedDevices();
@@ -98,20 +103,33 @@ public class Bluetooth extends BaseActivity {
 			mmOutStream = tmpOut;
 		}
 
-		public void run() {
-			// byte[] buffer = new byte[1024];
-			// String output = "";
-			// while (true) {
-			// try {
-			// // Read from the InputStream
-			// // output = new String(mmInStream.read(buffer));
-			// // Send the obtained bytes to the UI Activity
-			// } catch (IOException e) {
-			// break;
-			// }
-			// }
-		}
+//		private BufferedReader getReader(BluetoothSocket socket)
+//				throws IOException {
+//			InputStream socketIn = socket.getInputStream();
+//			return new BufferedReader(new InputStreamReader(socketIn));
+//		}
 
+		public void run() {
+//			try {
+//				BufferedReader br = getReader(mmSocket);
+//				String msg = null;
+//				while ((msg = br.readLine()) != null) {
+//					System.out.println(" write:" + msg);
+//				}
+//			} catch (IOException e) {
+//				System.out.println("断开连接了");
+//				e.printStackTrace();
+//			} finally {
+//				try {
+//					if (mmSocket != null) {
+//						mmSocket.close();
+//					}
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
+//			}
+		}
+		
 		/**
 		 * Write to the connected OutStream.
 		 * 

@@ -21,6 +21,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends BaseActivity {
 	private Button btnAdd;
@@ -32,8 +33,6 @@ public class MainActivity extends BaseActivity {
 	private TextView txtSocket;
 	private EditText editPik;
 	private TableLayout table;
-	private BaseControl bc;
-	private LightControl bl;
 	private TextView txtError;
 	private TextView lightRate;
 	private SeekBar lightBar;
@@ -42,6 +41,7 @@ public class MainActivity extends BaseActivity {
 	private String mac = "20:13:09:30:14:48";
 	private String mac2 = "20:13:09:30:12:77";
 	private BaseControl tembc;
+	private boolean isInit=false;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -59,7 +59,8 @@ public class MainActivity extends BaseActivity {
 		lightRate = (TextView) findViewById(R.id.lightRate);
 		gameInfo = getSharedPreferences("gameInfo", 0);
 		lightBar = (SeekBar) findViewById(R.id.lightBar);
-		tembc=new BaseControl();
+		
+		
 		btnClear.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -71,23 +72,23 @@ public class MainActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				gameInfo.edit().putString("user_setting", "").commit();
-				bl.setPikType(mac, 3, 20);
-				bl.StartLem1();
+//				bl.setMac(mac);
+//				bl.StartLem1();
 			}
 		});
 		
 		btnSocket.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				tembc.initSocket();
-				txtSocket.setText("初始化Socket成功");
+				tembc = new BaseControl(mac);
+				isInit=true;
 			}
 		});
 		
 		btnSocketSend.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				tembc.release();
+				//tembc.release();
 				txtSocket.setText("销毁Socket成功");
 //				tembc.sendToDevice("10_1_1_0");
 			}
@@ -141,7 +142,6 @@ public class MainActivity extends BaseActivity {
 
 	}
 
-
 	private void updateword() {
 		String[] userSetting = gameInfo.getString("user_setting", "")
 				.split(",");
@@ -159,9 +159,7 @@ public class MainActivity extends BaseActivity {
 			open.setOnClickListener(new Button.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					Message message = new Message();
-					message.what = 1 + pik * 10;
-					handler.sendMessage(message);
+					setControl(1 + pik * 10);
 				}
 			});
 			Button close = new Button(this);
@@ -170,9 +168,7 @@ public class MainActivity extends BaseActivity {
 			close.setOnClickListener(new Button.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					Message message = new Message();
-					message.what = 0 + pik * 10;
-					handler.sendMessage(message);
+					setControl(0 + pik * 10);
 				}
 			});
 			final TextView temtext = new TextView(this);
@@ -185,15 +181,13 @@ public class MainActivity extends BaseActivity {
 	}
 
 
-	// 接受时间
-	Handler handler = new Handler() {
-		public void handleMessage(Message msg) {
-			setControl(msg.what);
-			super.handleMessage(msg);
-		}
-	};
 
 	private void setControl(int getstatus) {
+		if (!isInit) {
+			Toast.makeText(MainActivity.this, "请先初始化。。。", Toast.LENGTH_SHORT)
+					.show();
+			return;
+		}
 		int pik = getstatus / 10;
 		int type = 10;
 		// Random rd = new Random();
@@ -206,13 +200,11 @@ public class MainActivity extends BaseActivity {
 			status = true;
 		}
 
-//		bc.setPikType(mac, pik, type);
+		
 		if (status) {
-			tembc.sendToDevice("10_"+pik+"_1_0");
-//			bc.open();
+			tembc.sendToDevice("10_" + pik + "_1_0");
 		} else {
-			tembc.sendToDevice("10_"+pik+"_0_0");
-//			bc.close();
+			tembc.sendToDevice("10_" + pik + "_0_0");
 		}
 	}
 
@@ -226,27 +218,16 @@ public class MainActivity extends BaseActivity {
 			// btnBlue.setVisibility(View.GONE);
 			txtError.setText("未开启蓝牙");
 		}
+
 //		tembc.initSocket();
 		//initBt();
-		tembc.initSocket();
-	}
-
-	public void initBt() {
-		if (bc == null) {
-			bc = new BaseControl();
-		}
-		if (bl == null) {
-			bl = new LightControl();
-		}
+//		tembc.initSocket();
 	}
 
 	public void onPause() {
+//		tembc.release();
+//		tembc=null;
 		super.onPause();
-		// bc.release();
-		bc = null;
-		bl = null;
-		tembc.release();
-		tembc=null;
 		finish();
 	}
 
