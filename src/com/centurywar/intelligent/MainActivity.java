@@ -87,7 +87,9 @@ public class MainActivity extends BaseActivity {
 		btnSocketSend.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				tembc.sendToDevice("10_1_1_0");
+				tembc.release();
+				txtSocket.setText("销毁Socket成功");
+//				tembc.sendToDevice("10_1_1_0");
 			}
 		});
 
@@ -118,9 +120,10 @@ public class MainActivity extends BaseActivity {
 				currentlight = progress;
 				lightBar.setProgress(currentlight);
 				lightRate.setText(currentlight * 100 / maxlight + " %");
-				bl.setPikType(mac, 3, 20);
-				// bl.StartLem1();
-				bl.setValue(currentlight);
+				//TODO::先屏蔽掉
+				
+//				bl.setPikType(mac, 3, 20);
+//				bl.setValue(currentlight);
 			}
 
 			@Override
@@ -191,12 +194,6 @@ public class MainActivity extends BaseActivity {
 	};
 
 	private void setControl(int getstatus) {
-		if(tembc==null)
-			return;
-		if(!tembc.getSocketStatus()){
-			tembc.initSocket();
-			return;
-		}
 		int pik = getstatus / 10;
 		int type = 10;
 		// Random rd = new Random();
@@ -231,6 +228,7 @@ public class MainActivity extends BaseActivity {
 		}
 //		tembc.initSocket();
 		//initBt();
+		tembc.initSocket();
 	}
 
 	public void initBt() {
@@ -247,7 +245,8 @@ public class MainActivity extends BaseActivity {
 		// bc.release();
 		bc = null;
 		bl = null;
-		tembc.close();
+		tembc.release();
+		tembc=null;
 		finish();
 	}
 

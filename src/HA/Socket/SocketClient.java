@@ -12,6 +12,7 @@ import android.os.Message;
 	private PrintWriter pw;
 	Socket socket;
 	public boolean initSocket=false;
+	public String sendTem="";
 	public SocketClient() {
 		new Thread() {
 			@Override
@@ -28,11 +29,22 @@ import android.os.Message;
 			}
 		}.start();
 	}
-	public boolean status(){
+
+	public boolean status() {
+		if (socket == null) {
+			return false;
+		}
 		return socket.isConnected();
 	}
-	public void sendMessage(String message) {
-		pw.println(message);
+
+	public final void sendMessageSocket(String message) {
+		if (!pw.checkError()&& socket.isConnected()&&!socket.isClosed()
+				&& socket != null) {
+			pw.println(message);
+		} else {
+			sendTem = message;
+			System.out.println("pw is not ready..");
+		}
 	}
 	
 	private Handler handler = new Handler() {
@@ -41,27 +53,24 @@ import android.os.Message;
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 			// ´¦ÀíUI
+			initSocket=true;
 			System.out.println("connecting..");
+			if (sendTem.length() > 0) {
+				sendMessageSocket(sendTem);
+				sendTem = "";
+			}
 		}
 	};
 
-	public String sendMsg(String msg) {
-		try {
-			BufferedReader in = new BufferedReader(new InputStreamReader(
-					socket.getInputStream()));
-			PrintWriter out = new PrintWriter(socket.getOutputStream());
-			out.println(msg);
-			out.flush();
-			return in.readLine();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return "";
-	}
+	
+
 
 	public void closeSocket() {
 		try {
-			socket.close();
+			if (initSocket) {
+				socket.close();
+			}
+			System.out.println("socket close...");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -16,14 +16,12 @@ public class BaseControl {
 	public int value = 0;
 	public static Bluetooth bt = null;
 	public boolean useBt=false;
-	public boolean hasinitSocke=false;
 	public BaseControl() {
 
 	}
 	public void initSocket(){
 		if (socket == null||!socket.status()) {
 			socket = new SocketClient();
-			hasinitSocke=true;
 		}
 	}
 	public boolean getSocketStatus(){
@@ -54,15 +52,11 @@ public class BaseControl {
 	}
 
 	public void sendToDevice(String message) {
-		initSocket();
 		if (useBt) {
 			bt.ContentWrite(message);
 		} else {
-			if (socket != null&&socket.status()) {
-				socket.sendMessage(message);
-			} else {
-				System.out.println("socket not init");
-			}
+			initSocket();
+			socket.sendMessageSocket(message);
 		}
 	}
 	public int status() {
@@ -70,7 +64,13 @@ public class BaseControl {
 	}
 
 	public void release() {
-		bt.release();
-		bt = null;
+		if (bt != null) {
+			bt.release();
+			bt = null;
+		}
+		if (socket != null) {
+			socket.closeSocket();
+			socket = null;
+		}
 	}
 }
