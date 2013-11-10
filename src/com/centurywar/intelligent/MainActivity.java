@@ -8,6 +8,9 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import HA.Socket.SocketClient;
+import android.content.BroadcastReceiver;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,6 +25,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+import at.abraxas.amarino.Amarino;
 
 public class MainActivity extends BaseActivity {
 	private Button btnAdd;
@@ -42,6 +46,7 @@ public class MainActivity extends BaseActivity {
 	private String mac2 = "20:13:09:30:12:77";
 	private BaseControl tembc;
 	private boolean isInit=false;
+	private ArduinoReceiver arduinoReceiver = new ArduinoReceiver();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -71,7 +76,9 @@ public class MainActivity extends BaseActivity {
 		btnGame1.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				gameInfo.edit().putString("user_setting", "").commit();
+				System.out.println("ad");
+				Amarino.sendDataToArduino(getApplicationContext(),mac,'A', "ad");
+				//gameInfo.edit().putString("user_setting", "").commit();
 //				bl.setMac(mac);
 //				bl.StartLem1();
 			}
@@ -80,8 +87,10 @@ public class MainActivity extends BaseActivity {
 		btnSocket.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				tembc = new BaseControl(mac);
-				isInit=true;
+//				tembc = new BaseControl(mac);
+//				isInit=true;
+				System.out.println("connection");
+				Amarino.connect(getApplicationContext(), mac);
 			}
 		});
 		
@@ -89,7 +98,8 @@ public class MainActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				//tembc.release();
-				txtSocket.setText("销毁Socket成功");
+				Amarino.disconnect(getApplicationContext(), mac);
+				System.out.println("disconnection");
 //				tembc.sendToDevice("10_1_1_0");
 			}
 		});
@@ -114,14 +124,13 @@ public class MainActivity extends BaseActivity {
 		});
 
 		updateword();
-		lightBar.setMax(maxlight);
+		lightBar.setMax(60);
 		lightBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			public void onProgressChanged(SeekBar arg0, int progress,
 					boolean fromUser) {
 				currentlight = progress;
 				lightBar.setProgress(currentlight);
-				lightRate.setText(currentlight * 100 / maxlight + " %");
-				//TODO::先屏蔽掉
+				lightRate.setText(currentlight+ "");
 				
 //				bl.setPikType(mac, 3, 20);
 //				bl.setValue(currentlight);
@@ -172,7 +181,7 @@ public class MainActivity extends BaseActivity {
 				}
 			});
 			final TextView temtext = new TextView(this);
-			temtext.setText(rowtext[0] + "在第" + rowtext[1] + "号");
+			temtext.setText(rowtext[0] + "" + rowtext[1] + "");
 			tr.addView(temtext);
 			tr.addView(open);
 			tr.addView(close);
@@ -184,7 +193,7 @@ public class MainActivity extends BaseActivity {
 
 	private void setControl(int getstatus) {
 		if (!isInit) {
-			Toast.makeText(MainActivity.this, "请先初始化。。。", Toast.LENGTH_SHORT)
+			Toast.makeText(MainActivity.this, "鏈墦寮�钃濈墮", Toast.LENGTH_SHORT)
 					.show();
 			return;
 		}
@@ -200,11 +209,11 @@ public class MainActivity extends BaseActivity {
 			status = true;
 		}
 
-		
+		int delay=currentlight;
 		if (status) {
-			tembc.sendToDevice("10_" + pik + "_1_0");
+			tembc.sendToDevice("10_" + pik + "_1_"+delay);
 		} else {
-			tembc.sendToDevice("10_" + pik + "_0_0");
+			tembc.sendToDevice("10_" + pik + "_0_"+delay);
 		}
 	}
 
@@ -216,7 +225,7 @@ public class MainActivity extends BaseActivity {
 		} else {
 			txtError.setVisibility(View.VISIBLE);
 			// btnBlue.setVisibility(View.GONE);
-			txtError.setText("未开启蓝牙");
+			txtError.setText("鏈墦寮�钃濈墮");
 		}
 
 //		tembc.initSocket();
@@ -230,8 +239,35 @@ public class MainActivity extends BaseActivity {
 		super.onPause();
 		finish();
 	}
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+		// in order to receive broadcasted intents we need to register our receiver
+		registerReceiver(arduinoReceiver, new IntentFilter("amarino.RESPONSE"));
+		
+//		Intent setCollection = new Intent("amarino.SET_COLLECTION");
+//		setCollection.putExtra("COLLECTION_NAME", "SensorGraph");
+//		sendBroadcast(setCollection);
+		// tell Amarino to connect
+//		sendBroadcast(new Intent("amarino.CONNECT"));
+		
+	}
+
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		// tell Amarino to disconnect
+//		sendBroadcast(new Intent("amarino.DISCONNECT"));
+		// do never forget to unregister a registered receiver
+		unregisterReceiver(arduinoReceiver);
+	}
+	
+
+	
 
 }
 
 
-	
+//	
