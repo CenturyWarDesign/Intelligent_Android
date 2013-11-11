@@ -7,6 +7,8 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import cn.jpush.android.api.JPushInterface;
+
 import HA.Socket.SocketClient;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
@@ -89,8 +91,9 @@ public class MainActivity extends BaseActivity {
 			public void onClick(View v) {
 //				tembc = new BaseControl(mac);
 //				isInit=true;
+				
 				System.out.println("connection");
-				Amarino.connect(getApplicationContext(), mac);
+//				Amarino.connect(getApplicationContext(), mac);
 			}
 		});
 		
@@ -120,6 +123,7 @@ public class MainActivity extends BaseActivity {
 				editName.setText("");
 				editPik.setText("");
 				updateword();
+				
 			}
 		});
 
@@ -148,7 +152,8 @@ public class MainActivity extends BaseActivity {
 
 			}
 		});
-
+		
+		initJPUSH();
 	}
 
 	private void updateword() {

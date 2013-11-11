@@ -5,6 +5,7 @@
     android:versionName="1.02" >
     
     <permission android:name="com.centurywar.intelligent.permission.JPUSH_MESSAGE" android:protectionLevel="signature" />
+    
     <uses-permission android:name="com.centurywar.intelligent.permission.JPUSH_MESSAGE" />
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -15,6 +16,8 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" /> 
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="17" />
@@ -24,6 +27,8 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        
+        
         
          <service
             android:name="cn.jpush.android.service.PushService"
@@ -37,13 +42,13 @@
             </intent-filter>
         </service>
         
-         <receiver
+          <receiver
             android:name="cn.jpush.android.service.PushReceiver"
             android:enabled="true" >
-          <intent-filter android:priority="1000"> 
+          <intent-filter android:priority="1000"> <!--since 1.3.5 -->
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" /> <!--since 1.3.5 -->
-                <category android:name="com.centurywar.intelligent" />
-            </intent-filter> 
+                <category android:name="com.centurywar.intelligent" /> <!--since 1.3.5 -->
+            </intent-filter> <!--since 1.3.5 -->
             <intent-filter>
                 <action android:name="android.intent.action.USER_PRESENT" />
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
@@ -54,6 +59,7 @@
                 <data android:scheme="package" />
             </intent-filter>
         </receiver>
+     
         <activity
             android:name="cn.jpush.android.ui.PushActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
@@ -64,12 +70,7 @@
                 <category android:name="com.centurywar.intelligent" />
             </intent-filter>
         </activity>
-         <service
-            android:name="cn.jpush.android.service.DownloadService"
-            android:enabled="true"
-            android:exported="false" >
-        </service>
-        <receiver android:name="cn.jpush.android.service.AlarmReceiver" />
+ 
         
         <receiver
             android:name="com.centurywar.intelligent.MyReceiver"
@@ -85,7 +86,14 @@
             </intent-filter>
         </receiver>
         
-         
+        <service
+            android:name="cn.jpush.android.service.DownloadService"
+            android:enabled="true"
+            android:exported="false" >
+        </service>
+        
+        <receiver android:name="cn.jpush.android.service.AlarmReceiver" /> 
+        
         <meta-data android:name="JPUSH_CHANNEL" android:value="developer-default"/>
         <!-- Required. AppKey copied from Portal -->
         <meta-data android:name="JPUSH_APPKEY" android:value="550943fb320cf916b5a78c41"/> 
@@ -100,7 +108,6 @@
         </activity>
         
     </application>
- 	<uses-permission android:name="android.permission.BLUETOOTH" /> 
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
     
 </manifest>

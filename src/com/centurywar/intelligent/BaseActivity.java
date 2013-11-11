@@ -22,7 +22,7 @@ public class BaseActivity extends Activity {
 		// initJPUSH();
 	}
 
-	private void initJPUSH() {
+	public void initJPUSH() {
 		JPushInterface.setDebugMode(true);
 		JPushInterface.init(this);
 		JPushInterface.setAlias(this, "caojunling", null);
@@ -35,11 +35,11 @@ public class BaseActivity extends Activity {
 	}
 
 	/**
-	 * ÉèÖÃTAG
+	 * ï¿½ï¿½ï¿½ï¿½TAG
 	 */
 	// private boolean setTag(String tag) {
 	//
-	// // ","¸ô¿ªµÄ¶à¸ö ×ª»»³É Set
+	// // ","ï¿½ï¿½ï¿½ï¿½ï¿½Ä¶ï¿½ï¿½ ×ªï¿½ï¿½ï¿½ï¿½ Set
 	// String[] sArray = tag.split(",");
 	// Set<String> tagSet = new LinkedHashSet<String>();
 	// for (String sTagItme : sArray) {
@@ -49,7 +49,7 @@ public class BaseActivity extends Activity {
 	// tagSet.add(sTagItme);
 	// }
 	//
-	// // µ÷ÓÃJPush APIÉèÖÃTag
+	// // ï¿½ï¿½ï¿½ï¿½JPush APIï¿½ï¿½ï¿½ï¿½Tag
 	// JPushInterface.setAliasAndTags(getApplicationContext(), null, tagSet,
 	// this);
 	// return true;
@@ -57,10 +57,10 @@ public class BaseActivity extends Activity {
 	// }
 	//
 	// /**
-	// * ÉèÖÃAlias
+	// * ï¿½ï¿½ï¿½ï¿½Alias
 	// */
 	// private void setAlias(String alias) {
-	// // µ÷ÓÃJPush APIÉèÖÃAlias
+	// // ï¿½ï¿½ï¿½ï¿½JPush APIï¿½ï¿½ï¿½ï¿½Alias
 	// JPushInterface.setAliasAndTags(getApplicationContext(), alias, null,
 	// this);
 	// }
