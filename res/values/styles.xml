@@ -17,5 +17,9 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
     <color name="writw">#ffffff</color>
- <color name="red">#ff0000</color>
+ 	<color name="red">#ff0000</color>
+ 	<style name="normalText" parent="@android:style/TextAppearance">
+		<item name="android:textColor">#444</item>
+		<item name="android:textSize">14sp</item>
+	</style>
 </resources>

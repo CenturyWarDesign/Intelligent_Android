@@ -26,4 +26,13 @@
     <string name="secure_connect">Connect a device - Secure</string>
     <string name="insecure_connect">Connect a device - Insecure</string>
     <string name="discoverable">Make discoverable</string>
+    
+    <!-- Login -->
+    <string name="hello">Hello World, LoginActivity!</string>
+    <string name="login_label_username">帐号</string>
+    <string name="login_label_password">密码</string>
+    <string name="login_label_signin">登 录</string>
+    <string name="login_status_logging_in">登录中...</string>
+    <string name="login_username_hint">Email或手机号</string>
+    <string name="login_register_link">没有帐号？ <a href="#">注册</a></string>
 </resources>

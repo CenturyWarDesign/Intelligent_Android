@@ -8,7 +8,7 @@ import java.util.concurrent.Executors;
 import android.os.Message;
 
 public class SocketClient {
-	private static final String HOST = "192.168.1.110";
+	private static final String HOST = "192.168.1.107";
 	// private static final String HOST = "42.121.123.185";
 	private static final int PORT = 8080;
 	private PrintWriter pw;
