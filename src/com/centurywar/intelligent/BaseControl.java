@@ -8,7 +8,6 @@ import android.os.Message;
 
 import HA.Socket.SocketClient;
 
-//控制基类
 public class BaseControl {
 	public int pik = 0;
 	public int type = 10;
@@ -16,7 +15,6 @@ public class BaseControl {
 	// static public String bluetoothMac = "20:13:09:30:12:77";
 	static public String bluetoothMac = "";
 	// public String bluetoothMac2 = "20:13:09:30:14:48";
-	// 数值或者状态
 	public int value = 0;
 	public static Bluetooth bt = null;
 	public boolean useBt = true;
@@ -75,7 +73,6 @@ public class BaseControl {
 
 	private Handler handler = new Handler() {
 		@Override
-		// 当有消息发送出来的时候就执行Handler的这个方法
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 			System.out.println("init bluetooth success..");

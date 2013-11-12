@@ -1,5 +1,6 @@
 package com.centurywar.intelligent;
 
+import HA.Socket.SocketClient;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.pm.ActivityInfo;
@@ -8,18 +9,20 @@ import android.view.Window;
 import cn.jpush.android.api.JPushInterface;
 
 public class BaseActivity extends Activity {
+	protected SocketClient socketClient=null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-
+		if (socketClient == null) {
+			socketClient = new SocketClient();
+		}
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		// initJPUSH();
 	}
 
 	public void initJPUSH() {
@@ -33,35 +36,4 @@ public class BaseActivity extends Activity {
 				.getDefaultAdapter();
 		return mBluetoothAdapter.isEnabled();
 	}
-
-	/**
-	 * ����TAG
-	 */
-	// private boolean setTag(String tag) {
-	//
-	// // ","�����Ķ�� ת���� Set
-	// String[] sArray = tag.split(",");
-	// Set<String> tagSet = new LinkedHashSet<String>();
-	// for (String sTagItme : sArray) {
-	// if (!ExampleUtil.isValidTagAndAlias(sTagItme)) {
-	// return false;
-	// }
-	// tagSet.add(sTagItme);
-	// }
-	//
-	// // ����JPush API����Tag
-	// JPushInterface.setAliasAndTags(getApplicationContext(), null, tagSet,
-	// this);
-	// return true;
-	//
-	// }
-	//
-	// /**
-	// * ����Alias
-	// */
-	// private void setAlias(String alias) {
-	// // ����JPush API����Alias
-	// JPushInterface.setAliasAndTags(getApplicationContext(), alias, null,
-	// this);
-	// }
 }

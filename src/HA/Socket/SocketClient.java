@@ -2,28 +2,34 @@ package HA.Socket;
 
 import java.io.*;
 import java.net.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-import android.os.Handler;
 import android.os.Message;
 
- public class SocketClient {
-//    private static final String HOST = "192.168.1.110";  
-    private static final String HOST = "42.121.123.185";  
-    private static final int PORT = 8080;  
+public class SocketClient {
+	private static final String HOST = "192.168.1.110";
+	// private static final String HOST = "42.121.123.185";
+	private static final int PORT = 8080;
 	private PrintWriter pw;
-	Socket socket;
-	public boolean initSocket=false;
-	public String sendTem="";
+	public static Socket socket;
+	public boolean initSocket = false;
+	private ExecutorService executorService;
+	private final int POOL_SIZE = 10;
+	public String sendTem = "";
+
 	public SocketClient() {
+		executorService = Executors.newFixedThreadPool(Runtime.getRuntime()
+				.availableProcessors() * POOL_SIZE);
 		new Thread() {
 			@Override
 			public void run() {
 				try {
 					socket = new Socket(HOST, PORT);
-					handler.sendEmptyMessage(0);
 					OutputStream socketOut = socket.getOutputStream();
 					pw = new PrintWriter(socketOut, true);
 					pw.println("7a941492a0dc743544ebc71c89370a64");
+					executorService.execute(new Handler(socket));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -39,7 +45,7 @@ import android.os.Message;
 	}
 
 	public final void sendMessageSocket(String message) {
-		if (!pw.checkError()&& socket.isConnected()&&!socket.isClosed()
+		if (!pw.checkError() && socket.isConnected() && !socket.isClosed()
 				&& socket != null) {
 			pw.println(message);
 		} else {
@@ -47,24 +53,16 @@ import android.os.Message;
 			System.out.println("pw is not ready..");
 		}
 	}
-	
-	private Handler handler = new Handler() {
-		@Override
-		// µ±ÓĞÏûÏ¢·¢ËÍ³öÀ´µÄÊ±ºò¾ÍÖ´ĞĞHandlerµÄÕâ¸ö·½·¨
-		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-			// ´¦ÀíUI
-			initSocket=true;
-			System.out.println("connecting..");
-			if (sendTem.length() > 0) {
-				sendMessageSocket(sendTem);
-				sendTem = "";
-			}
+
+	public void getMessage() {
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(
+					socket.getInputStream()));
+			String msg = br.readLine();
+		} catch (Exception e) {
+
 		}
-	};
-
-	
-
+	}
 
 	public void closeSocket() {
 		try {
@@ -77,8 +75,67 @@ import android.os.Message;
 		}
 	}
 
-	public static void main(String[] args) throws Exception {
-
+	public static boolean socketWrite(String content) {
+		try {
+			OutputStream socketOut = socket.getOutputStream();
+			PrintWriter pw = new PrintWriter(socketOut, true);
+			pw.println(content);
+			return true;
+		} catch (Exception e) {
+			// è®°å½•å¤±è´¥çš„ç¨‹åº
+			e.printStackTrace();
+			// æŠŠsocketç»™ç§»é™¤
+		}
+		return false;
 	}
 
+	/**
+	 * å–å¾—å‘½ä»¤è¡Œï¼Œå¯ä»¥æ˜¯æ‰‹æœºï¼Œä¹Ÿå¯ä»¥æ˜¯æ¿å­
+	 * 
+	 * @param gameuid
+	 * @param content
+	 * @return
+	 */
+	public static boolean socketRead(String content) {
+		System.out.println("[get from server]" + content);
+		return true;
+	}
+}
+
+class Handler implements Runnable {
+	private Socket socket;
+
+	public Handler(Socket socket) {
+		this.socket = socket;
+	}
+
+	private BufferedReader getReader(Socket socket) throws IOException {
+		InputStream socketIn = socket.getInputStream();
+		return new BufferedReader(new InputStreamReader(socketIn));
+	}
+
+	public String echo(String msg) {
+		return "echo:" + msg;
+	}
+
+	public void run() {
+		try {
+			BufferedReader br = getReader(socket);
+			String msg = null;
+			while ((msg = br.readLine()) != null) {
+				SocketClient.socketRead(msg.trim().substring(0));
+			}
+		} catch (IOException e) {
+			System.out.println("æ–­å¼€è¿æ¥äº†");
+			e.printStackTrace();
+		} finally {
+			try {
+				if (socket != null) {
+					socket.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }

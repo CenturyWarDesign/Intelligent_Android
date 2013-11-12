@@ -91,8 +91,7 @@ public class MainActivity extends BaseActivity {
 			public void onClick(View v) {
 //				tembc = new BaseControl(mac);
 //				isInit=true;
-				
-				System.out.println("connection");
+				socketClient.sendMessageSocket("send to server");
 //				Amarino.connect(getApplicationContext(), mac);
 			}
 		});
@@ -152,7 +151,6 @@ public class MainActivity extends BaseActivity {
 
 			}
 		});
-		
 		initJPUSH();
 	}
 
