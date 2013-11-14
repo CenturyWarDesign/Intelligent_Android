@@ -1,5 +1,6 @@
 package com.centurywar.intelligent;
 
+import net.sf.json.JSONObject;
 import HA.Socket.SocketClient;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -35,5 +36,33 @@ public class BaseActivity extends Activity {
 		BluetoothAdapter mBluetoothAdapter = BluetoothAdapter
 				.getDefaultAdapter();
 		return mBluetoothAdapter.isEnabled();
+	}
+
+	/**
+	 * 发送报文
+	 * 
+	 * @param jsonobj
+	 */
+	protected void sendMessage(JSONObject jsonobj) {
+		if (socketClient != null) {
+			if (!jsonobj.containsKey("control")) {
+				System.out.println("jsonobj has not control string!");
+			}
+			socketClient.sendMessageSocket(jsonobj.toString());
+			
+		} else {
+			System.out.println("Socket is Error!");
+		}
+	}
+	
+	/**
+	 * 如果需要返回值的话，在这里面进行处理
+	 * @param jsonobj
+	 */
+	protected void getMessage(JSONObject jsonobj) {
+		String command = jsonobj.getString("control");
+		if (command == "cpd") {
+
+		}
 	}
 }

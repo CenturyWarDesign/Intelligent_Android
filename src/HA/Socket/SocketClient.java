@@ -8,7 +8,7 @@ import java.util.concurrent.Executors;
 import android.os.Message;
 
 public class SocketClient {
-	private static final String HOST = "192.168.1.107";
+	private static final String HOST = "192.168.1.110";
 	// private static final String HOST = "42.121.123.185";
 	private static final int PORT = 8080;
 	private PrintWriter pw;
@@ -48,21 +48,13 @@ public class SocketClient {
 		if (!pw.checkError() && socket.isConnected() && !socket.isClosed()
 				&& socket != null) {
 			pw.println(message);
+			System.out.println("[send to server]message");
 		} else {
 			sendTem = message;
 			System.out.println("pw is not ready..");
 		}
 	}
 
-	public void getMessage() {
-		try {
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-					socket.getInputStream()));
-			String msg = br.readLine();
-		} catch (Exception e) {
-
-		}
-	}
 
 	public void closeSocket() {
 		try {
@@ -75,6 +67,11 @@ public class SocketClient {
 		}
 	}
 
+	/**
+	 * socket 写入
+	 * @param content
+	 * @return
+	 */
 	public static boolean socketWrite(String content) {
 		try {
 			OutputStream socketOut = socket.getOutputStream();

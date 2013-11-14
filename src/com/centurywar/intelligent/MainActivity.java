@@ -7,6 +7,8 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import net.sf.json.JSONObject;
+
 import cn.jpush.android.api.JPushInterface;
 
 import HA.Socket.SocketClient;
@@ -92,6 +94,11 @@ public class MainActivity extends BaseActivity {
 //				tembc = new BaseControl(mac);
 //				isInit=true;
 				socketClient.sendMessageSocket("send to server");
+				JSONObject jsob = new JSONObject();
+				jsob.put("control", "cpd");
+				jsob.put("username", "wanbin");
+				jsob.put("password", "wanbin");
+				sendMessage(jsob);
 //				Amarino.connect(getApplicationContext(), mac);
 			}
 		});
