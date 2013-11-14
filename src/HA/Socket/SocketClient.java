@@ -5,6 +5,8 @@ import java.net.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import net.sf.json.JSONObject;
+
 import android.os.Message;
 
 public class SocketClient {
@@ -95,6 +97,7 @@ public class SocketClient {
 	 */
 	public static boolean socketRead(String content) {
 		System.out.println("[get from server]" + content);
+		SocketHandleMap.sendToActivity(JSONObject.fromObject(content));
 		return true;
 	}
 }

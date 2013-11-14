@@ -17,7 +17,7 @@ import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
 import android.os.Message;
 
-public class Bluetooth extends BaseActivity {
+public class Bluetooth  {
 	private Set<BluetoothDevice> pairedDevices;
 	private static BluetoothAdapter mBluetoothAdapter = null;
 	private ConnectThread mChatService = null;

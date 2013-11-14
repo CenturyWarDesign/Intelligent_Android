@@ -2,6 +2,7 @@ package com.centurywar.intelligent;
 
 import net.sf.json.JSONObject;
 import HA.Socket.SocketClient;
+import HA.Socket.SocketHandleMap;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.pm.ActivityInfo;
@@ -9,7 +10,7 @@ import android.os.Bundle;
 import android.view.Window;
 import cn.jpush.android.api.JPushInterface;
 
-public class BaseActivity extends Activity {
+public abstract class BaseActivity extends Activity {
 	protected SocketClient socketClient=null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -24,8 +25,12 @@ public class BaseActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		SocketHandleMap.registerActivity(this);
 	}
 
+	
+
+	
 	public void initJPUSH() {
 		JPushInterface.setDebugMode(true);
 		JPushInterface.init(this);
@@ -59,10 +64,7 @@ public class BaseActivity extends Activity {
 	 * 如果需要返回值的话，在这里面进行处理
 	 * @param jsonobj
 	 */
-	protected void getMessage(JSONObject jsonobj) {
-		String command = jsonobj.getString("control");
-		if (command == "cpd") {
-
-		}
-	}
+	public abstract void MessageCallBack(JSONObject jsonobj);
+	
+	
 }

@@ -33,4 +33,16 @@ public class LoginActivity extends BaseActivity {
 			}
 		});
     }
+    
+    /* ³éÏó·½·¨
+     * @see com.centurywar.intelligent.BaseActivity#MessageCallBack(net.sf.json.JSONObject)
+     */
+    public void MessageCallBack(JSONObject jsonobj) {
+		String command = jsonobj.getString("control");
+		if (command.equals(ConstantControl.ECHO_CHECK_USERNAME_PASSWORD)) {
+			String username = jsonobj.getString("username");
+		} else if (command.equals(ConstantControl.ECHO_CHECK_USERNAME_PASSWORD)) {
+			String username = jsonobj.getString("username");
+		}
+	}
 }

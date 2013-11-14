@@ -98,13 +98,16 @@ public class MainActivity extends BaseActivity {
 //				isInit=true;
 				socketClient.sendMessageSocket("send to server");
 				JSONObject jsob = new JSONObject();
-				jsob.put("control", "cpd");
+				jsob.put("control", ConstantControl.CHECK_USERNAME_PASSWORD);
 				jsob.put("username", "wanbin");
 				jsob.put("password", "wanbin");
 				sendMessage(jsob);
+				
 //				Amarino.connect(getApplicationContext(), mac);
 			}
 		});
+		
+
 		
 		btnSocketSend.setOnClickListener(new Button.OnClickListener() {
 			@Override
@@ -164,6 +167,16 @@ public class MainActivity extends BaseActivity {
 		initJPUSH();
 	}
 
+	
+	public void MessageCallBack(JSONObject jsonobj) {
+		String command = jsonobj.getString("control");
+		if (command.equals(ConstantControl.ECHO_CHECK_USERNAME_PASSWORD)) {
+			String username = jsonobj.getString("username");
+		} else if (command.equals(ConstantControl.ECHO_CHECK_USERNAME_PASSWORD)) {
+			String username = jsonobj.getString("username");
+		}
+	}
+	
 	private void updateword() {
 		String[] userSetting = gameInfo.getString("user_setting", "")
 				.split(",");
