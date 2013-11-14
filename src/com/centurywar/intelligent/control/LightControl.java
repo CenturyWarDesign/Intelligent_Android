@@ -1,14 +1,14 @@
-package com.centurywar.intelligent;
+package com.centurywar.intelligent.control;
 
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-//控制基类
 public class LightControl extends BaseControl {
 	public int nowValue = 0;
 	public int putValue = 0;
@@ -21,7 +21,6 @@ public class LightControl extends BaseControl {
 		type = 20;
 	}
 
-	// 初始化时间函数
 	private void initTimer() {
 		if (timer == null) {
 			timer = new Timer();
@@ -29,7 +28,6 @@ public class LightControl extends BaseControl {
 		}
 	}
 
-	// 传递时间
 	private TimerTask timetask = new TimerTask() {
 		public void run() {
 			Message message = new Message();
@@ -38,7 +36,6 @@ public class LightControl extends BaseControl {
 		}
 	};
 
-	// 接受时间
 	Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			sendBluetoothMessage();
@@ -47,7 +44,6 @@ public class LightControl extends BaseControl {
 	};
 
 	public void sendBluetoothMessage() {
-		// 第一种灯光模式
 		if (gamestart = false) {
 			i = 255;
 			j = 0;

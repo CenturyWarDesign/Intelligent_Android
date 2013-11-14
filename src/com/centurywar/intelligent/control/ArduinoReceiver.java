@@ -1,4 +1,4 @@
-package com.centurywar.intelligent;
+package com.centurywar.intelligent.control;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

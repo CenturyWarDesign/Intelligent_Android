@@ -1,6 +1,7 @@
-package com.centurywar.intelligent;
+package com.centurywar.intelligent.control;
 
 import java.net.Socket;
+
 
 import android.bluetooth.BluetoothAdapter;
 import android.os.Handler;

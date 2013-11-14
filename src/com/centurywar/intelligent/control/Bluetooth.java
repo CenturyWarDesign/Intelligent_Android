@@ -1,4 +1,4 @@
-package com.centurywar.intelligent;
+package com.centurywar.intelligent.control;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,6 +8,8 @@ import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Set;
+
+import com.centurywar.intelligent.BaseActivity;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -25,7 +27,6 @@ public class Bluetooth extends BaseActivity {
 	public Bluetooth(String mac) {
 		
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-		// 搜索到已经配对的设备
 		pairedDevices = mBluetoothAdapter.getBondedDevices();
 		if (pairedDevices.size() > 0) {
 			for (BluetoothDevice device : pairedDevices) {
@@ -117,7 +118,7 @@ public class Bluetooth extends BaseActivity {
 //					System.out.println(" write:" + msg);
 //				}
 //			} catch (IOException e) {
-//				System.out.println("断开连接了");
+//				System.out.println("锟较匡拷锟斤拷锟斤拷锟斤拷");
 //				e.printStackTrace();
 //			} finally {
 //				try {

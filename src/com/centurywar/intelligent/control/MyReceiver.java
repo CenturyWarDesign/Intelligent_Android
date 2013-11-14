@@ -1,8 +1,10 @@
-package com.centurywar.intelligent;
+package com.centurywar.intelligent.control;
 
 import android.content.BroadcastReceiver;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.centurywar.intelligent.MainActivity;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

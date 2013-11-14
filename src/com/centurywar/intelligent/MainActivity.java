@@ -7,6 +7,9 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import com.centurywar.intelligent.control.ArduinoReceiver;
+import com.centurywar.intelligent.control.BaseControl;
+
 import net.sf.json.JSONObject;
 
 import cn.jpush.android.api.JPushInterface;
