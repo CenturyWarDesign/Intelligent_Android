@@ -3,7 +3,8 @@ package HA.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sf.json.JSONObject;
+import org.json.JSONObject;
+
 
 import com.centurywar.intelligent.BaseActivity;
 
@@ -32,7 +33,11 @@ public class SocketHandleMap {
 	 */
 	public static boolean sendToActivity(JSONObject jsonobj) {
 		for (String key : handleMap.keySet()) {
-			handleMap.get(key).MessageCallBack(jsonobj);
+			try {
+				handleMap.get(key).MessageCallBack(jsonobj);
+			} catch (Exception e) {
+
+			}
 		}
 		return true;
 	}

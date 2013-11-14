@@ -7,10 +7,11 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import org.json.JSONObject;
+
 import com.centurywar.intelligent.control.ArduinoReceiver;
 import com.centurywar.intelligent.control.BaseControl;
 
-import net.sf.json.JSONObject;
 
 import cn.jpush.android.api.JPushInterface;
 
@@ -98,9 +99,13 @@ public class MainActivity extends BaseActivity {
 //				isInit=true;
 				socketClient.sendMessageSocket("send to server");
 				JSONObject jsob = new JSONObject();
-				jsob.put("control", ConstantControl.CHECK_USERNAME_PASSWORD);
-				jsob.put("username", "wanbin");
-				jsob.put("password", "wanbin");
+				try {
+					jsob.put("control", ConstantControl.CHECK_USERNAME_PASSWORD);
+					jsob.put("username", "wanbin");
+					jsob.put("password", "wanbin");
+				} catch (Exception e) {
+
+				}
 				sendMessage(jsob);
 				
 //				Amarino.connect(getApplicationContext(), mac);
@@ -168,7 +173,7 @@ public class MainActivity extends BaseActivity {
 	}
 
 	
-	public void MessageCallBack(JSONObject jsonobj) {
+	public void MessageCallBack(JSONObject jsonobj) throws Exception  {
 		String command = jsonobj.getString("control");
 		if (command.equals(ConstantControl.ECHO_CHECK_USERNAME_PASSWORD)) {
 			String username = jsonobj.getString("username");

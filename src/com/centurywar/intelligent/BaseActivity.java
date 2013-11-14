@@ -1,6 +1,7 @@
 package com.centurywar.intelligent;
 
-import net.sf.json.JSONObject;
+import org.json.JSONObject;
+
 import HA.Socket.SocketClient;
 import HA.Socket.SocketHandleMap;
 import android.app.Activity;
@@ -50,7 +51,7 @@ public abstract class BaseActivity extends Activity {
 	 */
 	protected void sendMessage(JSONObject jsonobj) {
 		if (socketClient != null) {
-			if (!jsonobj.containsKey("control")) {
+			if (!jsonobj.has("control")) {
 				System.out.println("jsonobj has not control string!");
 			}
 			socketClient.sendMessageSocket(jsonobj.toString());
@@ -63,8 +64,9 @@ public abstract class BaseActivity extends Activity {
 	/**
 	 * 如果需要返回值的话，在这里面进行处理
 	 * @param jsonobj
+	 * @throws Exception 
 	 */
-	public abstract void MessageCallBack(JSONObject jsonobj);
+	public abstract void MessageCallBack(JSONObject jsonobj) throws Exception;
 	
 	
 }

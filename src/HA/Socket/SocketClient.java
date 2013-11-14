@@ -5,14 +5,18 @@ import java.net.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import net.sf.json.JSONObject;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 import android.os.Message;
 
 public class SocketClient {
-	private static final String HOST = "192.168.1.107";
+//	private static final String HOST = "192.168.1.107";
+	private static final String HOST = "192.168.1.110";
 	// private static final String HOST = "42.121.123.185";
 	private static final int PORT = 8080;
+	private static final String JSONArray = null;
 	private PrintWriter pw;
 	public static Socket socket;
 	public boolean initSocket = false;
@@ -94,10 +98,12 @@ public class SocketClient {
 	 * @param gameuid
 	 * @param content
 	 * @return
+	 * @throws JSONException 
 	 */
-	public static boolean socketRead(String content) {
+	public static boolean socketRead(String content) throws Exception {
 		System.out.println("[get from server]" + content);
-		SocketHandleMap.sendToActivity(JSONObject.fromObject(content));
+		JSONObject jsonobj = new JSONObject(content);
+		SocketHandleMap.sendToActivity(jsonobj);
 		return true;
 	}
 }
@@ -123,7 +129,11 @@ class Handler implements Runnable {
 			BufferedReader br = getReader(socket);
 			String msg = null;
 			while ((msg = br.readLine()) != null) {
-				SocketClient.socketRead(msg.trim().substring(0));
+				try {
+					SocketClient.socketRead(msg);
+				} catch (Exception e) {
+
+				}
 			}
 		} catch (IOException e) {
 			System.out.println("断开连接了");
