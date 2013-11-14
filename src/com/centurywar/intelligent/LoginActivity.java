@@ -1,4 +1,5 @@
 package com.centurywar.intelligent;
+import net.sf.json.JSONObject;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -23,7 +24,12 @@ public class LoginActivity extends BaseActivity {
 			public void onClick(View v) {
 				String userName = username.getText().toString();
 				String pwd	= password.getText().toString();
-				socketClient.sendMessageSocket("control_cup_"+userName+"_"+"7a941492a0dc743544ebc71c89370a64");
+//				socketClient.sendMessageSocket("control_cup_"+userName+"_"+"7a941492a0dc743544ebc71c89370a64");
+				JSONObject jsob = new JSONObject();
+				jsob.put("control", "cpd");
+				jsob.put("username", "wanbin");
+				jsob.put("password", "7a941492a0dc743544ebc71c89370a64");
+				sendMessage(jsob);
 			}
 		});
     }
