@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.centurywar.intelligent"
-    android:versionCode="102"
-    android:versionName="1.02" >
+    android:versionCode="202"
+    android:versionName="2.02" >
     
     <permission android:name="com.centurywar.intelligent.permission.JPUSH_MESSAGE" android:protectionLevel="signature" />
     
@@ -90,23 +90,28 @@
             android:name="cn.jpush.android.service.DownloadService"
             android:enabled="true"
             android:exported="false" >
-        </service>
-        
-        <receiver android:name="cn.jpush.android.service.AlarmReceiver" /> 
-        
-        <meta-data android:name="JPUSH_CHANNEL" android:value="developer-default"/>
+        </service><receiver android:name="cn.jpush.android.service.AlarmReceiver" />
+
+        <meta-data
+            android:name="JPUSH_CHANNEL"
+            android:value="developer-default" />
         <!-- Required. AppKey copied from Portal -->
-        <meta-data android:name="JPUSH_APPKEY" android:value="550943fb320cf916b5a78c41"/> 
-        
+        <meta-data
+            android:name="JPUSH_APPKEY"
+            android:value="550943fb320cf916b5a78c41" />
+
+        <activity android:name="com.centurywar.intelligent.LoginActivity" >
+        </activity>
         <activity
-            android:name="com.centurywar.intelligent.LoginActivity"
+            android:name="com.centurywar.intelligent.MainActivity"
             android:label="@string/app_name" >
-             <intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.centurywar.intelligent.MainActivity"/>
+
     </application>
 
     

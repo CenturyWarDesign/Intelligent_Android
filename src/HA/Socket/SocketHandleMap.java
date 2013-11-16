@@ -36,7 +36,7 @@ public class SocketHandleMap {
 			try {
 				handleMap.get(key).MessageCallBack(jsonobj);
 			} catch (Exception e) {
-
+				System.out.println(key+"int haddle error");
 			}
 		}
 		return true;

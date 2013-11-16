@@ -41,6 +41,7 @@ public class MainActivity extends BaseActivity {
 	private Button btnGame1;
 	private Button btnSocket;
 	private Button btnSocketSend;
+	private Button btnGetTem;
 	private EditText editName;
 	private TextView txtSocket;
 	private EditText editPik;
@@ -62,6 +63,7 @@ public class MainActivity extends BaseActivity {
 		btnAdd = (Button) findViewById(R.id.btnAdd);
 		btnGame1 = (Button) findViewById(R.id.btngame1);
 		btnClear = (Button) findViewById(R.id.btnClear);
+		btnGetTem = (Button) findViewById(R.id.btnGetTem);
 		btnSocket = (Button) findViewById(R.id.btnSocket);
 		btnSocketSend = (Button) findViewById(R.id.btnSocketSend);
 		editName = (EditText) findViewById(R.id.editName);
@@ -97,7 +99,6 @@ public class MainActivity extends BaseActivity {
 			public void onClick(View v) {
 //				tembc = new BaseControl(mac);
 //				isInit=true;
-				socketClient.sendMessageSocket("send to server");
 				JSONObject jsob = new JSONObject();
 				try {
 					jsob.put("control", ConstantControl.CHECK_USERNAME_PASSWORD);
@@ -107,7 +108,6 @@ public class MainActivity extends BaseActivity {
 
 				}
 				sendMessage(jsob);
-				
 //				Amarino.connect(getApplicationContext(), mac);
 			}
 		});
@@ -121,6 +121,21 @@ public class MainActivity extends BaseActivity {
 				Amarino.disconnect(getApplicationContext(), mac);
 				System.out.println("disconnection");
 //				tembc.sendToDevice("10_1_1_0");
+			}
+		});
+		
+		
+		//取得当前温度
+		btnGetTem.setOnClickListener(new Button.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				System.out.println("getTem");
+				JSONObject jsob = new JSONObject();
+				try {
+					jsob.put("control", ConstantControl.GET_USER_TEMPERATURE);
+				} catch (Exception e) {
+				}
+				sendMessage(jsob);
 			}
 		});
 
@@ -169,16 +184,18 @@ public class MainActivity extends BaseActivity {
 
 			}
 		});
-		initJPUSH();
 	}
 
 	
 	public void MessageCallBack(JSONObject jsonobj) throws Exception  {
 		String command = jsonobj.getString("control");
 		if (command.equals(ConstantControl.ECHO_CHECK_USERNAME_PASSWORD)) {
-			String username = jsonobj.getString("username");
-		} else if (command.equals(ConstantControl.ECHO_CHECK_USERNAME_PASSWORD)) {
-			String username = jsonobj.getString("username");
+			//验证用户名密码
+		} else if (command.equals(ConstantControl.ECHO_GET_USER_TEMPERATURE)) {
+			//取得温度
+			System.out.println("i got it ");
+			JSONObject tem=(JSONObject)jsonobj.getJSONArray("data").get(0);
+			btnGetTem.setText("当前温度："+tem.get("values").toString());
 		}
 	}
 	
