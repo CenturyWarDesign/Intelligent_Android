@@ -7,7 +7,8 @@ import android.bluetooth.BluetoothAdapter;
 import android.os.Handler;
 import android.os.Message;
 
-import HA.Socket.SocketClient;
+import Socket.Bluetooth;
+import Socket.SocketClient;
 
 public class BaseControl {
 	public int pik = 0;

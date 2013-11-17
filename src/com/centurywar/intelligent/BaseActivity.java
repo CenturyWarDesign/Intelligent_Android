@@ -3,8 +3,10 @@ package com.centurywar.intelligent;
 
 import org.json.JSONObject;
 
-import HA.Socket.SocketClient;
-import HA.Socket.SocketHandleMap;
+
+import Socket.Bluetooth;
+import Socket.SocketClient;
+import Socket.SocketHandleMap;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.pm.ActivityInfo;
@@ -16,8 +18,10 @@ import android.widget.Toast;
 import cn.jpush.android.api.JPushInterface;
 
 public abstract class BaseActivity extends Activity {
-	protected SocketClient socketClient=null;
-
+	protected SocketClient socketClient = null;
+	protected static Bluetooth blueTooth = null;
+	protected static String mac = "20:13:09:30:14:48";
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -26,6 +30,8 @@ public abstract class BaseActivity extends Activity {
 		if (socketClient == null) {
 			socketClient = new SocketClient();
 		}
+		initBlueTooth();
+		initJPUSH();
 	}
 
 	@Override
@@ -34,8 +40,11 @@ public abstract class BaseActivity extends Activity {
 		SocketHandleMap.registerActivity(this);
 	}
 
-	
-
+	public void initBlueTooth() {
+		if (blueTooth == null) {
+			blueTooth = new Bluetooth(mac);
+		}
+	}
 	
 	public void initJPUSH() {
 		JPushInterface.setDebugMode(true);

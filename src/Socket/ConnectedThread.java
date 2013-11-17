@@ -1,4 +1,4 @@
-package com.centurywar.intelligent.control;
+package Socket;
 
 import java.io.IOException;
 import java.io.InputStream;

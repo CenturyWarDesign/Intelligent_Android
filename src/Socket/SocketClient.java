@@ -1,4 +1,4 @@
-package HA.Socket;
+package Socket;
 
 import java.io.*;
 import java.net.*;

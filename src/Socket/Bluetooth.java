@@ -1,4 +1,4 @@
-package com.centurywar.intelligent.control;
+package Socket;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,24 +25,36 @@ public class Bluetooth extends BaseClass{
 	private ConnectThread mChatService = null;
 	private ConnectedThread mConnectedThread = null;
 	private BluetoothSocket mmSocket = null;
+	public String blueToothMac = "";
 
 	public Bluetooth(String mac) {
-		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-		pairedDevices = mBluetoothAdapter.getBondedDevices();
-		boolean isconnected = false;
-		if (pairedDevices.size() > 0) {
-			for (BluetoothDevice device : pairedDevices) {
-				if (device.getAddress().equals(mac)) {
-					mChatService = new ConnectThread(device);
-					mChatService.run();
-					isconnected = true;
-					return;
+		blueToothMac = mac;
+		// 多线程去连接蓝牙
+		new Thread() {
+			public void run() {
+				try {
+					mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+					pairedDevices = mBluetoothAdapter.getBondedDevices();
+					boolean isconnected = false;
+					if (pairedDevices.size() > 0) {
+						for (BluetoothDevice device : pairedDevices) {
+							if (device.getAddress().equals(blueToothMac)) {
+								mChatService = new ConnectThread(device);
+								mChatService.run();
+								isconnected = true;
+								return;
+							}
+						}
+					}
+					if (!isconnected) {
+						System.out.print("error bluetooth");
+					}
+				} catch (Exception e) {
+					e.toString();
 				}
+
 			}
-		}
-		if (!isconnected) {
-			Log("没有成功安装");
-		}
+		}.start();
 	}
 
 	private class ConnectThread extends Thread {

@@ -89,7 +89,6 @@ public class MainActivity extends BaseActivity {
 					jsob.put("username", "wanbin");
 					jsob.put("password", "wanbin");
 				} catch (Exception e) {
-
 				}
 				sendMessage(jsob);
 //				Amarino.connect(getApplicationContext(), mac);
@@ -101,10 +100,6 @@ public class MainActivity extends BaseActivity {
 		btnSocketSend.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				//tembc.release();
-				Amarino.disconnect(getApplicationContext(), mac);
-				System.out.println("disconnection");
-//				tembc.sendToDevice("10_1_1_0");
 			}
 		});
 		
