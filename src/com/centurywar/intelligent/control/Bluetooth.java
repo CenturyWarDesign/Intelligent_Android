@@ -10,14 +10,16 @@ import java.lang.reflect.Method;
 import java.util.Set;
 
 import com.centurywar.intelligent.BaseActivity;
+import com.centurywar.intelligent.BaseClass;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
-public class Bluetooth  {
+public class Bluetooth extends BaseClass{
 	private Set<BluetoothDevice> pairedDevices;
 	private static BluetoothAdapter mBluetoothAdapter = null;
 	private ConnectThread mChatService = null;
@@ -25,19 +27,22 @@ public class Bluetooth  {
 	private BluetoothSocket mmSocket = null;
 
 	public Bluetooth(String mac) {
-		
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		pairedDevices = mBluetoothAdapter.getBondedDevices();
+		boolean isconnected = false;
 		if (pairedDevices.size() > 0) {
 			for (BluetoothDevice device : pairedDevices) {
 				if (device.getAddress().equals(mac)) {
 					mChatService = new ConnectThread(device);
 					mChatService.run();
+					isconnected = true;
 					return;
 				}
 			}
 		}
-
+		if (!isconnected) {
+			Log("没有成功安装");
+		}
 	}
 
 	private class ConnectThread extends Thread {
@@ -85,76 +90,15 @@ public class Bluetooth  {
 		}
 	}
 
-	private class ConnectedThread extends Thread {
-		private final BluetoothSocket mmSocket;
-		private final InputStream mmInStream;
-		private final OutputStream mmOutStream;
-
-		public ConnectedThread(BluetoothSocket socket) {
-			mmSocket = socket;
-			InputStream tmpIn = null;
-			OutputStream tmpOut = null;
-			try {
-				tmpIn = socket.getInputStream();
-				tmpOut = socket.getOutputStream();
-			} catch (IOException e) {
-			}
-
-			mmInStream = tmpIn;
-			mmOutStream = tmpOut;
-		}
-
-//		private BufferedReader getReader(BluetoothSocket socket)
-//				throws IOException {
-//			InputStream socketIn = socket.getInputStream();
-//			return new BufferedReader(new InputStreamReader(socketIn));
-//		}
-
-		public void run() {
-//			try {
-//				BufferedReader br = getReader(mmSocket);
-//				String msg = null;
-//				while ((msg = br.readLine()) != null) {
-//					System.out.println(" write:" + msg);
-//				}
-//			} catch (IOException e) {
-//				System.out.println("�Ͽ�������");
-//				e.printStackTrace();
-//			} finally {
-//				try {
-//					if (mmSocket != null) {
-//						mmSocket.close();
-//					}
-//				} catch (IOException e) {
-//					e.printStackTrace();
-//				}
-//			}
-		}
-		
-		/**
-		 * Write to the connected OutStream.
-		 * 
-		 * @param buffer
-		 *            The bytes to write
-		 */
-		public void write(byte[] buffer) {
-			try {
-				mmOutStream.write(buffer);
-			} catch (IOException e) {
-			}
-		}
-
-		public void cancel() {
-			try {
-				mmSocket.close();
-			} catch (IOException e) {
-			}
-		}
-	}
-
+	/**
+	 * 向蓝牙间写入数据
+	 * @param str
+	 */
 	public void ContentWrite(String str) {
 		if (mConnectedThread != null) {
 			mConnectedThread.write(str.getBytes());
+		} else {
+			Log("booltooth connect error");
 		}
 	}
 

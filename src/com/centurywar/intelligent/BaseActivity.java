@@ -9,10 +9,12 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.Window;
+import android.widget.Toast;
 import cn.jpush.android.api.JPushInterface;
 
 public abstract class BaseActivity extends Activity {
 	protected SocketClient socketClient=null;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -67,6 +69,14 @@ public abstract class BaseActivity extends Activity {
 	 * @throws Exception 
 	 */
 	public abstract void MessageCallBack(JSONObject jsonobj) throws Exception;
+
 	
+	/**
+	 * 发送Toast提示
+	 * @param message
+	 */
+	protected void ToastMessage(String message) {
+		Toast.makeText(BaseActivity.this, message, Toast.LENGTH_SHORT).show();
+	}
 	
 }

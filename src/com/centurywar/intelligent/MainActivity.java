@@ -1,29 +1,14 @@
 package com.centurywar.intelligent;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.net.UnknownHostException;
 
 import org.json.JSONObject;
 
-import com.centurywar.intelligent.control.ArduinoReceiver;
 import com.centurywar.intelligent.control.BaseControl;
 
 
-import cn.jpush.android.api.JPushInterface;
 
-import HA.Socket.SocketClient;
-import android.content.BroadcastReceiver;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -55,7 +40,6 @@ public class MainActivity extends BaseActivity {
 	private String mac2 = "20:13:09:30:12:77";
 	private BaseControl tembc;
 	private boolean isInit=false;
-	private ArduinoReceiver arduinoReceiver = new ArduinoReceiver();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -247,11 +231,6 @@ public class MainActivity extends BaseActivity {
 		}
 		int pik = getstatus / 10;
 		int type = 10;
-		// Random rd = new Random();
-		// int i = rd.nextInt() % 2;
-
-		// if (i == 1) {
-		// }
 		boolean status = false;
 		if (getstatus % 10 == 1) {
 			status = true;
@@ -269,21 +248,13 @@ public class MainActivity extends BaseActivity {
 		super.onResume();
 		if (checkBluetooth()) {
 			txtError.setVisibility(View.GONE);
-			// btnBlue.setVisibility(View.GONE);
 		} else {
 			txtError.setVisibility(View.VISIBLE);
-			// btnBlue.setVisibility(View.GONE);
 			txtError.setText("未打开蓝牙");
 		}
-
-//		tembc.initSocket();
-		//initBt();
-//		tembc.initSocket();
 	}
 
 	public void onPause() {
-//		tembc.release();
-//		tembc=null;
 		super.onPause();
 		finish();
 	}
@@ -291,25 +262,13 @@ public class MainActivity extends BaseActivity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-		// in order to receive broadcasted intents we need to register our receiver
-		registerReceiver(arduinoReceiver, new IntentFilter("amarino.RESPONSE"));
-		
-//		Intent setCollection = new Intent("amarino.SET_COLLECTION");
-//		setCollection.putExtra("COLLECTION_NAME", "SensorGraph");
-//		sendBroadcast(setCollection);
-		// tell Amarino to connect
-//		sendBroadcast(new Intent("amarino.CONNECT"));
-		
 	}
 
 
 	@Override
 	protected void onStop() {
 		super.onStop();
-		// tell Amarino to disconnect
-//		sendBroadcast(new Intent("amarino.DISCONNECT"));
 		// do never forget to unregister a registered receiver
-		unregisterReceiver(arduinoReceiver);
 	}
 	
 
