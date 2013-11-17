@@ -7,7 +7,6 @@ import java.security.NoSuchAlgorithmException;
 
 import org.json.JSONObject;
 
-import sun.misc.BASE64Encoder;
 
 
 import Socket.Bluetooth;
@@ -40,7 +39,7 @@ public abstract class BaseActivity extends Activity {
 		}
 		initBlueTooth();
 		//如果是用模拟器，请把这个关闭
-		initJPUSH();
+		//initJPUSH();
 	}
 
 	@Override
@@ -195,16 +194,21 @@ public abstract class BaseActivity extends Activity {
 	protected String getUsername() {
 		return getGameInfoStr("username");
 	}
-	
-	/** MD5加密 */
-	public static final String MD5(String str)
-			throws NoSuchAlgorithmException, UnsupportedEncodingException {
-		return "7a941492a0dc743544ebc71c89370a64";
-		// 确定计算方法
-//		MessageDigest md5 = MessageDigest.getInstance("MD5");
-//		BASE64Encoder base64en = new BASE64Encoder();
-//		// 加密后的字符串
-//		String newstr = base64en.encode(md5.digest(str.getBytes("utf-8")));
-//		return newstr;
+
+	public static String MD52(String val) throws NoSuchAlgorithmException {
+		MessageDigest md5 = MessageDigest.getInstance("MD5");
+		md5.update(val.getBytes());
+		byte[] m = md5.digest();// 加密
+		return getString(m);
 	}
+
+	private static String getString(byte[] b) {
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < b.length; i++) {
+			sb.append(b[i]);
+		}
+		return sb.toString();
+	}
+	
+	
 }

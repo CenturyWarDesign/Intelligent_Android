@@ -30,10 +30,9 @@ public class LoginActivity extends BaseActivity {
 				// socketClient.sendMessageSocket("control_cup_"+userName+"_"+"7a941492a0dc743544ebc71c89370a64");
 				JSONObject jsob = new JSONObject();
 				try {
-					
 					jsob.put("control", "cup");
 					jsob.put("username", username.getText().toString().trim());
-					jsob.put("password", MD5(password.getText().toString().trim()));
+					jsob.put("password", BaseClass.MD5(password.getText().toString().trim()));
 				} catch (Exception e) {
 					
 				}
