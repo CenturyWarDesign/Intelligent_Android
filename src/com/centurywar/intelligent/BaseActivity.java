@@ -1,7 +1,13 @@
 package com.centurywar.intelligent;
 
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import org.json.JSONObject;
+
+import sun.misc.BASE64Encoder;
 
 
 import Socket.Bluetooth;
@@ -9,6 +15,7 @@ import Socket.SocketClient;
 import Socket.SocketHandleMap;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,12 +28,13 @@ public abstract class BaseActivity extends Activity {
 	protected SocketClient socketClient = null;
 	protected static Bluetooth blueTooth = null;
 	protected static String mac = "20:13:09:30:14:48";
-	
+	protected SharedPreferences gameInfo;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		gameInfo = getSharedPreferences("gameInfo", 0);
 		if (socketClient == null) {
 			socketClient = new SocketClient();
 		}
@@ -162,4 +170,35 @@ public abstract class BaseActivity extends Activity {
 		}
 	};
 	
+	/** 设置SharePerference数据，参数String */
+	protected void setGameInfoStr(String key,String value) {
+		gameInfo.edit().putString(key, value).commit();
+	}
+	
+	/** 获取SharePerference数据，参数为key */
+	protected String getGameInfoStr(String key) {
+		return gameInfo.getString(key, "");
+	}
+	
+	/** 获取SharePerference数据，参数为sec序列码 */
+	protected String getSec() {
+		return getGameInfoStr("sec");
+	}
+	
+	/** 获取SharePerference数据，参数为username */
+	protected String getUsername() {
+		return getGameInfoStr("username");
+	}
+	
+	/** MD5加密 */
+	public static final String MD5(String str)
+			throws NoSuchAlgorithmException, UnsupportedEncodingException {
+		return "7a941492a0dc743544ebc71c89370a64";
+		// 确定计算方法
+//		MessageDigest md5 = MessageDigest.getInstance("MD5");
+//		BASE64Encoder base64en = new BASE64Encoder();
+//		// 加密后的字符串
+//		String newstr = base64en.encode(md5.digest(str.getBytes("utf-8")));
+//		return newstr;
+	}
 }

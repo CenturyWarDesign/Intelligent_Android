@@ -1,6 +1,7 @@
 package com.centurywar.intelligent;
 import org.json.JSONObject;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -29,11 +30,12 @@ public class LoginActivity extends BaseActivity {
 				// socketClient.sendMessageSocket("control_cup_"+userName+"_"+"7a941492a0dc743544ebc71c89370a64");
 				JSONObject jsob = new JSONObject();
 				try {
+					
 					jsob.put("control", "cup");
-					jsob.put("username", "wanbin");
-					jsob.put("password", "7a941492a0dc743544ebc71c89370a64");
+					jsob.put("username", username.getText().toString().trim());
+					jsob.put("password", MD5(password.getText().toString().trim()));
 				} catch (Exception e) {
-
+					
 				}
 				sendMessage(jsob);
 			}
@@ -46,9 +48,18 @@ public class LoginActivity extends BaseActivity {
 	public void MessageCallBack(JSONObject jsonobj) throws Exception {
 		String command = jsonobj.getString("control");
 		Log.v("liuchunlong", "登陆，收到的返回报文为："+jsonobj.toString());
-		if (command.equals(ConstantControl.ECHO_CHECK_USERNAME_PASSWORD)) {
+		System.out.println("[liuchunlong] 收到服务器的报文："+jsonobj.toString());
+		if (null != command&&command.equals(ConstantControl.ECHO_CHECK_USERNAME_PASSWORD)) {
 			
-			String username = jsonobj.getString("username");
+			setGameInfoStr("sec", jsonobj.getString("sec"));
+			setGameInfoStr("username", jsonobj.getString("username"));
+			Intent intent = new Intent();
+			intent.setClass(getApplicationContext(), MainActivity.class);
+			startActivity(intent);
+			ToastMessage("登陆成功");
+			finish();
+		}else {
+			ToastMessage("登陆失败");
 		}
 	}
 }
