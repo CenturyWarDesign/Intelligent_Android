@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.centurywar.intelligent"
-    android:versionCode="202"
-    android:versionName="2.02" >
+    android:versionCode="201"
+    android:versionName="2.01" >
     
     <permission android:name="com.centurywar.intelligent.permission.JPUSH_MESSAGE" android:protectionLevel="signature" />
     

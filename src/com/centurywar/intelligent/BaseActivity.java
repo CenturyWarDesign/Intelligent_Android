@@ -39,6 +39,7 @@ public abstract class BaseActivity extends Activity {
 			socketClient = new SocketClient();
 		}
 		initBlueTooth();
+		//如果是用模拟器，请把这个关闭
 		initJPUSH();
 	}
 
@@ -55,9 +56,14 @@ public abstract class BaseActivity extends Activity {
 	}
 	
 	public void initJPUSH() {
-		JPushInterface.setDebugMode(true);
-		JPushInterface.init(this);
-		JPushInterface.setAlias(this, "caojunling", null);
+		try{
+			JPushInterface.setDebugMode(true);
+			JPushInterface.init(this);
+			JPushInterface.setAlias(this, "caojunling", null);
+		}
+		catch(Exception e){
+			System.out.println(e.toString());
+		}
 	}
 
 	protected boolean checkBluetooth() {
