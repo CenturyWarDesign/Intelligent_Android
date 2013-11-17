@@ -100,7 +100,7 @@ public abstract class BaseActivity extends Activity {
 	protected JSONObject getJsonobject(int type, int pik, int value, int data) {
 		JSONObject object = new JSONObject();
 		try {
-			object.put("control", ConstantControl.SET_STATUS);
+			object.put("control", ConstantControl.CONTROL_DEVICE);
 			object.put("type", type);
 			object.put("pik", pik);
 			object.put("value", value);
