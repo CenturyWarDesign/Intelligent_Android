@@ -64,15 +64,73 @@ public abstract class BaseActivity extends Activity {
 	 * @param jsonobj
 	 */
 	protected void sendMessage(JSONObject jsonobj) {
-		if (socketClient != null) {
-			if (!jsonobj.has("control")) {
-				System.out.println("jsonobj has not control string!");
-			}
-			socketClient.sendMessageSocket(jsonobj.toString());
-			
-		} else {
-			System.out.println("Socket is Error!");
+		if (!jsonobj.has("control")) {
+			System.out.println("jsonobj has not control string!");
+			return;
 		}
+		try {
+			boolean threadBlueTooth = false;
+			// 这是设置板子状态的代码，优先进行蓝牙传输
+			if (jsonobj.getString("control").equals(ConstantControl.SET_STATUS)
+					&& blueTooth.getStatus()) {
+				String contrl = getSendStringFromJsonObject(jsonobj);
+				if (contrl.length() > 0) {
+					blueTooth.ContentWrite(contrl);
+					threadBlueTooth = true;
+				}
+			}
+			// 如果没有通过蓝牙，那就通过socket传输
+			if (socketClient != null && !threadBlueTooth) {
+				socketClient.sendMessageSocket(jsonobj.toString());
+			}
+		} catch (Exception e) {
+			System.out.print(e.toString());
+		}
+
+	}
+	
+	/**
+	 * 返回JSONObject类型的指令
+	 * @param type
+	 * @param pik
+	 * @param value
+	 * @param data
+	 * @return
+	 */
+	protected JSONObject getJsonobject(int type, int pik, int value, int data) {
+		JSONObject object = new JSONObject();
+		try {
+			object.put("control", ConstantControl.SET_STATUS);
+			object.put("type", type);
+			object.put("pik", pik);
+			object.put("value", value);
+			object.put("data", data);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return object;
+	}
+	
+	/**
+	 * 把JSONObject 转化为指令
+	 * @param obj
+	 * @return
+	 */
+	protected String getSendStringFromJsonObject(JSONObject obj) {
+		if (!obj.has("type") || !obj.has("pik") || !obj.has("value")
+				|| !obj.has("data")) {
+			return "";
+		} else {
+			try {
+				return String.format("%d_%d_%d_%d", obj.getInt("type"),
+						obj.getInt("pik"), obj.getInt("value"),
+						obj.getInt("data"));
+			} catch (Exception e) {
+				System.out.print(e.toString());
+				return "";
+			}
+		}
+
 	}
 	
 	/**

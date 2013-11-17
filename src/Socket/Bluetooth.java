@@ -109,6 +109,7 @@ public class Bluetooth extends BaseClass{
 	public void ContentWrite(String str) {
 		if (mConnectedThread != null) {
 			mConnectedThread.write(str.getBytes());
+			System.out.println("[send to bluetooth]"+str);
 		} else {
 			Log("booltooth connect error");
 		}

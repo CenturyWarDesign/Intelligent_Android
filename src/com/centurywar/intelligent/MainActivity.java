@@ -70,11 +70,7 @@ public class MainActivity extends BaseActivity {
 		btnGame1.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				System.out.println("ad");
-				Amarino.sendDataToArduino(getApplicationContext(),mac,'A', "ad");
-				//gameInfo.edit().putString("user_setting", "").commit();
-//				bl.setMac(mac);
-//				bl.StartLem1();
+				sendMessage(getJsonobject(10, 1, 3, 2));
 			}
 		});
 		
@@ -232,9 +228,9 @@ public class MainActivity extends BaseActivity {
 
 		int delay=currentlight;
 		if (status) {
-			tembc.sendToDevice("10_" + pik + "_1_"+delay);
+			sendMessage(getJsonobject(10, pik, 1, 2));
 		} else {
-			tembc.sendToDevice("10_" + pik + "_0_"+delay);
+			sendMessage(getJsonobject(10, pik, 0, 2));
 		}
 	}
 

@@ -67,10 +67,8 @@ public class LightControl extends BaseControl {
 			}
 
 			String tem = type + "_" + pik + "_" + value + "_0,";
-			bt.ContentWrite(tem);
 		}
 		if (readyToSend.length() > 0) {
-			bt.ContentWrite(readyToSend);
 			Log.v("bloothsendtem", readyToSend);
 			readyToSend = "";
 			gamestart = false;
