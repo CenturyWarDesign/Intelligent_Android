@@ -100,10 +100,10 @@
             android:name="JPUSH_APPKEY"
             android:value="550943fb320cf916b5a78c41" />
 
-        <activity android:name="com.centurywar.intelligent.LoginActivity" >
+        <activity android:name="com.centurywar.intelligent.MainActivity" >
         </activity>
         <activity
-            android:name="com.centurywar.intelligent.MainActivity"
+            android:name="com.centurywar.intelligent.LoginActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

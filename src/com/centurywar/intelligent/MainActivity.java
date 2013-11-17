@@ -9,6 +9,7 @@ import com.centurywar.intelligent.control.BaseControl;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -164,6 +165,7 @@ public class MainActivity extends BaseActivity {
 	
 	public void MessageCallBack(JSONObject jsonobj) throws Exception  {
 		String command = jsonobj.getString("control");
+		Log.i("liuchunlong", "MainActivity收到的返回报文为："+jsonobj.toString());
 		if (command.equals(ConstantControl.ECHO_CHECK_USERNAME_PASSWORD)) {
 			//验证用户名密码
 		} else if (command.equals(ConstantControl.ECHO_GET_USER_TEMPERATURE)) {

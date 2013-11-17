@@ -2,6 +2,7 @@ package com.centurywar.intelligent;
 import org.json.JSONObject;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -28,7 +29,7 @@ public class LoginActivity extends BaseActivity {
 				// socketClient.sendMessageSocket("control_cup_"+userName+"_"+"7a941492a0dc743544ebc71c89370a64");
 				JSONObject jsob = new JSONObject();
 				try {
-					jsob.put("control", "cpd");
+					jsob.put("control", "cup");
 					jsob.put("username", "wanbin");
 					jsob.put("password", "7a941492a0dc743544ebc71c89370a64");
 				} catch (Exception e) {
@@ -44,9 +45,9 @@ public class LoginActivity extends BaseActivity {
      */
 	public void MessageCallBack(JSONObject jsonobj) throws Exception {
 		String command = jsonobj.getString("control");
+		Log.v("liuchunlong", "登陆，收到的返回报文为："+jsonobj.toString());
 		if (command.equals(ConstantControl.ECHO_CHECK_USERNAME_PASSWORD)) {
-			String username = jsonobj.getString("username");
-		} else if (command.equals(ConstantControl.ECHO_CHECK_USERNAME_PASSWORD)) {
+			
 			String username = jsonobj.getString("username");
 		}
 	}

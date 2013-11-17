@@ -11,7 +11,7 @@ import org.json.JSONObject;
 
 public class SocketClient {
 //	private static final String HOST = "192.168.1.107";
-	private static final String HOST = "192.168.1.31";
+	private static final String HOST = "192.168.1.100";
 	// private static final String HOST = "42.121.123.185";
 	private static final int PORT = 8080;
 	private PrintWriter pw;
