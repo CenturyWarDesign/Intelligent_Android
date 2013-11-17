@@ -6,9 +6,14 @@ import java.util.Map;
 import org.json.JSONObject;
 
 
-import com.centurywar.intelligent.BaseActivity;
+import android.os.Bundle;
+import android.os.Message;
+import android.util.Log;
 
-public class SocketHandleMap {
+import com.centurywar.intelligent.BaseActivity;
+import com.centurywar.intelligent.BaseClass;
+
+public class SocketHandleMap extends BaseClass{
 	public static Map<String, BaseActivity> handleMap = new HashMap<String, BaseActivity>();
 
 	public static boolean registerActivity(BaseActivity baseActivity) {
@@ -33,10 +38,14 @@ public class SocketHandleMap {
 	 */
 	public static boolean sendToActivity(JSONObject jsonobj) {
 		for (String key : handleMap.keySet()) {
+			Bundle bundle = new Bundle();
+			bundle.putString("jsonobj", jsonobj.toString());
+			Message message = new Message();
+			message.setData(bundle);
 			try {
-				handleMap.get(key).MessageCallBack(jsonobj);
+				handleMap.get(key).handler.sendMessage(message);
 			} catch (Exception e) {
-				System.out.println(key+"int haddle error");
+				System.out.println(e.toString());
 			}
 		}
 		return true;

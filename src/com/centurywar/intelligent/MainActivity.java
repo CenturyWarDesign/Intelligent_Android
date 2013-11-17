@@ -177,7 +177,6 @@ public class MainActivity extends BaseActivity {
 			//验证用户名密码
 		} else if (command.equals(ConstantControl.ECHO_GET_USER_TEMPERATURE)) {
 			//取得温度
-			System.out.println("i got it ");
 			JSONObject tem=(JSONObject)jsonobj.getJSONArray("data").get(0);
 			btnGetTem.setText("当前温度："+tem.get("values").toString());
 		}

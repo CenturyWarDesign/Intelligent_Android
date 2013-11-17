@@ -1,5 +1,6 @@
 package com.centurywar.intelligent;
 
+
 import org.json.JSONObject;
 
 import HA.Socket.SocketClient;
@@ -8,6 +9,8 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Window;
 import android.widget.Toast;
 import cn.jpush.android.api.JPushInterface;
@@ -78,5 +81,18 @@ public abstract class BaseActivity extends Activity {
 	protected void ToastMessage(String message) {
 		Toast.makeText(BaseActivity.this, message, Toast.LENGTH_SHORT).show();
 	}
+	
+	// 接受时间
+	public Handler handler = new Handler() {
+		public void handleMessage(Message msg) {
+			try {
+				Bundle bundle = msg.getData();
+				MessageCallBack( new JSONObject(bundle.getString("jsonobj")));
+			} catch (Exception e) {
+				System.out.println(e.toString());
+			}
+			super.handleMessage(msg);
+		}
+	};
 	
 }
