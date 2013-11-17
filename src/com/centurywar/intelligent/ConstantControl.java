@@ -27,5 +27,5 @@ public class ConstantControl {
 	
 	//控制指令（必须要有以下内容；type,pik,value,data）
 	public static String CONTROL_DEVICE = "cd";
-	public static String ECHO_CONTROL_DEVICE = "cd";
+	public static String ECHO_CONTROL_DEVICE = "ecd";
 }
