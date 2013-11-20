@@ -118,6 +118,8 @@ public abstract class BaseActivity extends Activity {
 			object.put("pik", pik);
 			object.put("value", value);
 			object.put("data", data);
+			object.put("username", getGameInfoStr("username"));
+			object.put("sec", getGameInfoStr("username"));
 		} catch (Exception e) {
 			System.out.println(e.toString());
 		}

@@ -12,7 +12,7 @@ public class LoginActivity extends BaseActivity {
 	private EditText username;
 	private EditText password;
 	private Button submit;
-	
+	private String pwd;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,19 +20,23 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.login);
         username	= (EditText)findViewById(R.id.username_edit);
         password	= (EditText)findViewById(R.id.password_edit);
+        if(null!=getUsername()){
+        	username.setText(getUsername());
+        }
+        if(null!=getGameInfoStr("password")){
+        	password.setText(getGameInfoStr("password"));
+        }
         submit		= (Button)findViewById(R.id.signin_button);
         submit.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				String userName = username.getText().toString();
-				String pwd = password.getText().toString();
 				// socketClient.sendMessageSocket("control_cup_"+userName+"_"+"7a941492a0dc743544ebc71c89370a64");
 				JSONObject jsob = new JSONObject();
 				try {
-					
 					jsob.put("control", "cup");
 					jsob.put("username", username.getText().toString().trim());
 					jsob.put("password", BaseClass.MD5(password.getText().toString().trim()));
+					pwd = password.getText().toString().trim();
 				} catch (Exception e) {
 					System.out.println("登陆时候出现异常"+e.getMessage());
 					ToastMessage("请重新输入");
@@ -53,6 +57,7 @@ public class LoginActivity extends BaseActivity {
 			if(jsonobj.getString("retCode").equals("0000")){
 				setGameInfoStr("sec", jsonobj.getString("sec"));
 				setGameInfoStr("username", jsonobj.getString("username"));
+				setGameInfoStr("password", pwd);
 				Intent intent = new Intent();
 				intent.setClass(getApplicationContext(), MainActivity.class);
 				startActivity(intent);
@@ -62,6 +67,7 @@ public class LoginActivity extends BaseActivity {
 				ToastMessage(jsonobj.getString("memo"));
 			}
 		}else {
+			setGameInfoStr("password", "");
 			ToastMessage("登陆失败");
 		}
 	}
