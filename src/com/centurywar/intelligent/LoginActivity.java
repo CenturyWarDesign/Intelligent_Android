@@ -66,9 +66,10 @@ public class LoginActivity extends BaseActivity {
 			}else{
 				ToastMessage(jsonobj.getString("memo"));
 			}
-		}else {
-			setGameInfoStr("password", "");
-			ToastMessage("µÇÂ½Ê§°Ü");
 		}
+//		else {
+//			setGameInfoStr("password", "");
+//			ToastMessage("µÇÂ½Ê§°Ü");
+//		}
 	}
 }
