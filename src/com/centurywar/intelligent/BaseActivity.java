@@ -59,7 +59,6 @@ public abstract class BaseActivity extends Activity {
 		try{
 			JPushInterface.setDebugMode(true);
 			JPushInterface.init(this);
-			JPushInterface.setAlias(this, "caojunling", null);
 		}
 		catch(Exception e){
 			System.out.println(e.toString());

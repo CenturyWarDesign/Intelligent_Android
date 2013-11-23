@@ -1,5 +1,7 @@
 package com.centurywar.intelligent;
 import org.json.JSONObject;
+
+import cn.jpush.android.api.JPushInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -58,6 +60,7 @@ public class LoginActivity extends BaseActivity {
 				setGameInfoStr("sec", jsonobj.getString("sec"));
 				setGameInfoStr("username", jsonobj.getString("username"));
 				setGameInfoStr("password", pwd);
+				JPushInterface.setAlias(this, jsonobj.getString("username"), null);
 				Intent intent = new Intent();
 				intent.setClass(getApplicationContext(), MainActivity.class);
 				startActivity(intent);
