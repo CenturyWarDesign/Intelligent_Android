@@ -26,7 +26,8 @@ import cn.jpush.android.api.JPushInterface;
 public abstract class BaseActivity extends Activity {
 	protected SocketClient socketClient = null;
 	protected static Bluetooth blueTooth = null;
-	protected static String mac = "20:13:09:30:14:48";
+//	protected static String mac = "20:13:09:30:14:48";
+	private String mac = "20:13:09:30:12:77";
 	protected SharedPreferences gameInfo;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +40,7 @@ public abstract class BaseActivity extends Activity {
 		}
 		initBlueTooth();
 		//如果是用模拟器，请把这个关闭
-		//initJPUSH();
+		initJPUSH();
 	}
 
 	@Override
@@ -113,7 +114,7 @@ public abstract class BaseActivity extends Activity {
 	protected JSONObject getJsonobject(int type, int pik, int value, int data) {
 		JSONObject object = new JSONObject();
 		try {
-			object.put("control", ConstantControl.CONTROL_DEVICE);
+			object.put("control", ConstantControl.SET_STATUS);
 			object.put("type", type);
 			object.put("pik", pik);
 			object.put("value", value);

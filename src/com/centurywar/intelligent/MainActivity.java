@@ -37,10 +37,7 @@ public class MainActivity extends BaseActivity {
 	private SeekBar lightBar;
 	protected SharedPreferences gameInfo;
 	private int maxlight = 255, currentlight = 0;
-	private String mac = "20:13:09:30:14:48";
-	private String mac2 = "20:13:09:30:12:77";
 	private BaseControl tembc;
-	private boolean isInit=false;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -127,6 +124,8 @@ public class MainActivity extends BaseActivity {
 							+ editPik.getText().toString();
 				}
 				strtem = strtem.trim();
+				System.out.println(strtem);
+				
 				gameInfo.edit().putString("user_setting", strtem).commit();
 				editName.setText("");
 				editPik.setText("");
@@ -182,7 +181,7 @@ public class MainActivity extends BaseActivity {
 		for (int n = 0; n < userSetting.length; n++) {
 			String[] rowtext = userSetting[n].split("_");
 			if (rowtext.length != 2) {
-				return;
+				continue;
 			}
 			TableRow tr = new TableRow(this);
 			final int pik = Integer.parseInt(rowtext[1]);
@@ -216,11 +215,6 @@ public class MainActivity extends BaseActivity {
 
 
 	private void setControl(int getstatus) {
-		if (!isInit) {
-			Toast.makeText(MainActivity.this, "未打开蓝牙", Toast.LENGTH_SHORT)
-					.show();
-			return;
-		}
 		int pik = getstatus / 10;
 		int type = 10;
 		boolean status = false;
