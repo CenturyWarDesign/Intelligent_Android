@@ -1,6 +1,8 @@
 package com.centurywar.intelligent;
 import org.json.JSONObject;
 
+import com.centurywar.intelligent.control.BaseControl;
+
 import cn.jpush.android.api.JPushInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -60,6 +62,7 @@ public class LoginActivity extends BaseActivity {
 				setGameInfoStr("sec", jsonobj.getString("sec"));
 				setGameInfoStr("username", jsonobj.getString("username"));
 				setGameInfoStr("password", pwd);
+				BaseControl.bluetoothMac=jsonobj.getJSONObject("info").getString("bluetoothmac");
 				JPushInterface.setAlias(this, jsonobj.getString("username"), null);
 				Intent intent = new Intent();
 				intent.setClass(getApplicationContext(), MainActivity.class);

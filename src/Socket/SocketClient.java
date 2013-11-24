@@ -11,9 +11,11 @@ import org.json.JSONObject;
 
 public class SocketClient {
 //	private static final String HOST = "192.168.1.107";
-	private static final String HOST = "192.168.1.31";
-	// private static final String HOST = "42.121.123.185";
+//	private static final String HOST = "192.168.1.111";
+//	 private static final String HOST = "42.121.123.185";
+	 private static final String HOST = "192.168.1.31";
 	private static final int PORT = 8080;
+//	private static final int PORT = 8686;
 	private PrintWriter pw;
 	public static Socket socket;
 	public boolean initSocket = false;
@@ -32,6 +34,7 @@ public class SocketClient {
 					OutputStream socketOut = socket.getOutputStream();
 					pw = new PrintWriter(socketOut, true);
 					pw.println("android");
+//					pw.println("7a941492a0dc743544ebc71c89370a64");
 					executorService.execute(new Handler(socket));
 				} catch (Exception e) {
 					e.printStackTrace();

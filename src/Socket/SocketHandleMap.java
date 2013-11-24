@@ -15,7 +15,7 @@ import com.centurywar.intelligent.BaseClass;
 
 public class SocketHandleMap extends BaseClass{
 	public static Map<String, BaseActivity> handleMap = new HashMap<String, BaseActivity>();
-
+	public static String sec="";
 	public static boolean registerActivity(BaseActivity baseActivity) {
 		String name = baseActivity.getClass().getName();
 		if (handleMap.containsKey(name)) {
@@ -37,6 +37,11 @@ public class SocketHandleMap extends BaseClass{
 	 * @return
 	 */
 	public static boolean sendToActivity(JSONObject jsonobj) {
+		try {
+			sec = jsonobj.getString("sec");
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
 		for (String key : handleMap.keySet()) {
 			Bundle bundle = new Bundle();
 			bundle.putString("jsonobj", jsonobj.toString());

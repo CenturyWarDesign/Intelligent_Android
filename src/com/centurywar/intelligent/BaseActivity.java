@@ -27,7 +27,7 @@ public abstract class BaseActivity extends Activity {
 	protected SocketClient socketClient = null;
 	protected static Bluetooth blueTooth = null;
 //	protected static String mac = "20:13:09:30:14:48";
-	private String mac = "20:13:09:30:12:77";
+	public static String mac = "20:13:09:30:12:77";
 	protected SharedPreferences gameInfo;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +40,7 @@ public abstract class BaseActivity extends Activity {
 		}
 		initBlueTooth();
 		//如果是用模拟器，请把这个关闭
-		initJPUSH();
+//		initJPUSH();
 	}
 
 	@Override
@@ -94,6 +94,7 @@ public abstract class BaseActivity extends Activity {
 			}
 			// 如果没有通过蓝牙，那就通过socket传输
 			if (socketClient != null && !threadBlueTooth) {
+				jsonobj.put("sec", getSec());
 				socketClient.sendMessageSocket(jsonobj.toString());
 			}
 		} catch (Exception e) {
