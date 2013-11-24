@@ -7,6 +7,8 @@ import java.security.NoSuchAlgorithmException;
 
 import org.json.JSONObject;
 
+import com.centurywar.intelligent.control.BaseControl;
+
 
 
 import Socket.Bluetooth;
@@ -27,7 +29,6 @@ public abstract class BaseActivity extends Activity {
 	protected SocketClient socketClient = null;
 	protected static Bluetooth blueTooth = null;
 //	protected static String mac = "20:13:09:30:14:48";
-	public static String mac = "20:13:09:30:12:77";
 	protected SharedPreferences gameInfo;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +52,7 @@ public abstract class BaseActivity extends Activity {
 
 	public void initBlueTooth() {
 		if (blueTooth == null) {
-			blueTooth = new Bluetooth(mac);
+			blueTooth = new Bluetooth(BaseControl.bluetoothMac);
 		}
 	}
 	
@@ -81,7 +82,14 @@ public abstract class BaseActivity extends Activity {
 			System.out.println("jsonobj has not control string!");
 			return;
 		}
+		
 		try {
+			if (!jsonobj.has("username")) {
+				jsonobj.put("username",getGameInfoStr("username"));
+			}
+			if (!jsonobj.has("sec")) {
+				jsonobj.put("sec",getGameInfoStr("sec"));
+			}
 			boolean threadBlueTooth = false;
 			// 这是设置板子状态的代码，优先进行蓝牙传输
 			if (jsonobj.getString("control").equals(ConstantControl.SET_STATUS)
