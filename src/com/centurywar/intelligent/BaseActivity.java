@@ -39,9 +39,9 @@ public abstract class BaseActivity extends Activity {
 		if (socketClient == null) {
 			socketClient = new SocketClient();
 		}
-		initBlueTooth();
+//		initBlueTooth();
 		//如果是用模拟器，请把这个关闭
-//		initJPUSH();
+		initJPUSH();
 	}
 
 	@Override
@@ -51,7 +51,8 @@ public abstract class BaseActivity extends Activity {
 	}
 
 	public void initBlueTooth() {
-		if (blueTooth == null) {
+		if (blueTooth == null&&BaseControl.bluetoothMac.length()>0) {
+			System.out.print("BlueToothMac:"+BaseControl.bluetoothMac);
 			blueTooth = new Bluetooth(BaseControl.bluetoothMac);
 		}
 	}

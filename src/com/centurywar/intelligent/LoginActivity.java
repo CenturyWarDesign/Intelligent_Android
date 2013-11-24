@@ -63,6 +63,10 @@ public class LoginActivity extends BaseActivity {
 				setGameInfoStr("username", jsonobj.getString("username"));
 				setGameInfoStr("password", pwd);
 				BaseControl.bluetoothMac=jsonobj.getJSONObject("info").getString("bluetoothmac");
+				//登录成功初始化蓝牙
+				if (BaseControl.bluetoothMac.length() > 0) {
+					initBlueTooth();
+				}
 				JPushInterface.setAlias(this, jsonobj.getString("username"), null);
 				Intent intent = new Intent();
 				intent.setClass(getApplicationContext(), MainActivity.class);
