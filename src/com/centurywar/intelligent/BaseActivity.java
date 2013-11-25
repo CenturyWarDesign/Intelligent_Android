@@ -8,6 +8,7 @@ import java.security.NoSuchAlgorithmException;
 import org.json.JSONObject;
 
 import com.centurywar.intelligent.control.BaseControl;
+import com.umeng.analytics.MobclickAgent;
 
 
 
@@ -41,6 +42,7 @@ public abstract class BaseActivity extends Activity {
 		}
 //		initBlueTooth();
 		//如果是用模拟器，请把这个关闭
+		MobclickAgent.setDebugMode( true );
 		initJPUSH();
 	}
 
@@ -48,7 +50,16 @@ public abstract class BaseActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 		SocketHandleMap.registerActivity(this);
+		MobclickAgent.onResume(this);
 	}
+	
+
+	public void onPause() {
+		super.onPause();
+		MobclickAgent.onPause(this);
+	}
+	
+	
 
 	public void initBlueTooth() {
 		if (blueTooth == null&&BaseControl.bluetoothMac.length()>0) {
@@ -56,17 +67,15 @@ public abstract class BaseActivity extends Activity {
 			blueTooth = new Bluetooth(BaseControl.bluetoothMac);
 		}
 	}
-	
-	public void initJPUSH() {
-		try{
-			JPushInterface.setDebugMode(true);
-			JPushInterface.init(this);
-		}
-		catch(Exception e){
-			System.out.println(e.toString());
-		}
+
+	public void initJPUSHAlias(String username) {
+		JPushInterface.setAlias(this, username, null);
 	}
 
+	public void initJPUSH() {
+		JPushInterface.setDebugMode(true);
+		JPushInterface.init(this);
+	}
 	protected boolean checkBluetooth() {
 		BluetoothAdapter mBluetoothAdapter = BluetoothAdapter
 				.getDefaultAdapter();

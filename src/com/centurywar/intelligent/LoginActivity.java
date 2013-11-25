@@ -67,7 +67,7 @@ public class LoginActivity extends BaseActivity {
 				if (BaseControl.bluetoothMac.length() > 0) {
 					initBlueTooth();
 				}
-				JPushInterface.setAlias(this, jsonobj.getString("username"), null);
+				initJPUSHAlias(jsonobj.getString("username"));
 				Intent intent = new Intent();
 				intent.setClass(getApplicationContext(), MainActivity.class);
 				startActivity(intent);
