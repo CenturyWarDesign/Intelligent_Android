@@ -1,6 +1,7 @@
 package com.centurywar.intelligent;
 
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.centurywar.intelligent.control.BaseControl;
@@ -62,7 +63,11 @@ public class MainActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				gameInfo.edit().putString("user_setting", "").commit();
-				updateword();
+				try {
+					updateword();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		});
 		btnGame1.setOnClickListener(new Button.OnClickListener() {
@@ -115,36 +120,55 @@ public class MainActivity extends BaseActivity {
 		btnAdd.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				//
 				String strtem = gameInfo.getString("user_setting", "");
-				if (strtem.length() > 0) {
-					strtem = strtem + "," + editName.getText().toString() + "_"
-							+ editPik.getText().toString();
-				} else {
-					strtem = editName.getText().toString() + "_"
-							+ editPik.getText().toString();
+
+				JSONArray jsa;
+				try {
+					if (strtem.length() > 0) {
+						jsa = new JSONArray(strtem);
+					} else {
+						jsa = new JSONArray();
+					}
+
+					JSONObject obj = new JSONObject();
+					obj.put("name", editName.getText().toString());
+					obj.put("pik", editPik.getText().toString());
+					obj.put("value", 0);
+					jsa.put(obj);
+					System.out.println(jsa.toString());
+					gameInfo.edit().putString("user_setting", jsa.toString())
+							.commit();
+				} catch (Exception e) {
+
 				}
-				strtem = strtem.trim();
-				System.out.println(strtem);
-				
-				gameInfo.edit().putString("user_setting", strtem).commit();
+
 				editName.setText("");
 				editPik.setText("");
-				updateword();
-				
+				try {
+					updateword();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
 			}
 		});
 
-		updateword();
+		try {
+			updateword();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		lightBar.setMax(60);
 		lightBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			public void onProgressChanged(SeekBar arg0, int progress,
 					boolean fromUser) {
 				currentlight = progress;
 				lightBar.setProgress(currentlight);
-				lightRate.setText(currentlight+ "");
-				
-//				bl.setPikType(mac, 3, 20);
-//				bl.setValue(currentlight);
+				lightRate.setText(currentlight + "");
+
+				// bl.setPikType(mac, 3, 20);
+				// bl.setValue(currentlight);
 			}
 
 			@Override
@@ -162,29 +186,52 @@ public class MainActivity extends BaseActivity {
 	}
 
 	
-	public void MessageCallBack(JSONObject jsonobj) throws Exception  {
+	public void MessageCallBack(JSONObject jsonobj) throws Exception {
 		String command = jsonobj.getString("control");
-		Log.i("liuchunlong", "MainActivity收到的返回报文为："+jsonobj.toString());
+		Log.i("liuchunlong", "MainActivity收到的返回报文为：" + jsonobj.toString());
 		if (command.equals(ConstantControl.ECHO_CHECK_USERNAME_PASSWORD)) {
-			//验证用户名密码
+			// 验证用户名密码
 		} else if (command.equals(ConstantControl.ECHO_GET_USER_TEMPERATURE)) {
-			//取得温度
-			JSONObject tem=(JSONObject)jsonobj.getJSONArray("data").get(0);
-			btnGetTem.setText("当前温度："+tem.get("values").toString());
-		}
-	}
-	
-	private void updateword() {
-		String[] userSetting = gameInfo.getString("user_setting", "")
-				.split(",");
-		table.removeAllViews();
-		for (int n = 0; n < userSetting.length; n++) {
-			String[] rowtext = userSetting[n].split("_");
-			if (rowtext.length != 2) {
-				continue;
+			// 取得温度
+			JSONObject tem = (JSONObject) jsonobj.getJSONArray("data").get(0);
+			btnGetTem.setText("当前温度：" + tem.get("values").toString());
+		} else if (command.equals(ConstantControl.ECHO_SET_STATUS)) {
+			String str = jsonobj.getString("command");
+			String[] temcommand = str.split("_");
+			// r_10_3_1_0
+			int pik = Integer.parseInt(temcommand[2]);
+			int val = Integer.parseInt(temcommand[3]);
+			String strtem = gameInfo.getString("user_setting", "");
+			try {
+				JSONArray jsa = new JSONArray();
+				for (int i = 0; i < jsa.length(); i++) {
+					JSONObject obj = jsa.getJSONObject(i);
+					if (obj.getInt("pik") == pik) {
+						obj.put("value", val);
+					}
+				}
+				gameInfo.edit().putString("user_setting", jsa.toString())
+						.commit();
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
+			try {
+				updateword();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}
+
+	}
+
+	private void updateword() throws Exception {
+		JSONArray  jsa = new JSONArray( gameInfo.getString("user_setting", ""));
+		table.removeAllViews();
+		for (int n = 0; n < jsa.length(); n++) {
+			JSONObject obj = jsa.getJSONObject(n);
 			TableRow tr = new TableRow(this);
-			final int pik = Integer.parseInt(rowtext[1]);
+			final int pik = obj.getInt("pik");
 			Button open = new Button(this);
 			open.setText("open");
 			open.setTag(pik);
@@ -204,7 +251,9 @@ public class MainActivity extends BaseActivity {
 				}
 			});
 			final TextView temtext = new TextView(this);
-			temtext.setText(rowtext[0] + "" + rowtext[1] + "");
+			temtext.setText(String.format("名称：%s 针脚：%d 状态：%s",
+					obj.getString("name"), obj.getInt("pik"),
+					obj.getInt("value") == 0 ? "关闭" : "打开"));
 			tr.addView(temtext);
 			tr.addView(open);
 			tr.addView(close);
@@ -257,7 +306,6 @@ public class MainActivity extends BaseActivity {
 		// do never forget to unregister a registered receiver
 	}
 	
-
 	
 
 }
