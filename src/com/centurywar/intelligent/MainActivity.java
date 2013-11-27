@@ -122,7 +122,6 @@ public class MainActivity extends BaseActivity {
 			public void onClick(View v) {
 				//
 				String strtem = gameInfo.getString("user_setting", "");
-
 				JSONArray jsa;
 				try {
 					if (strtem.length() > 0) {
@@ -130,7 +129,6 @@ public class MainActivity extends BaseActivity {
 					} else {
 						jsa = new JSONArray();
 					}
-
 					JSONObject obj = new JSONObject();
 					obj.put("name", editName.getText().toString());
 					obj.put("pik", editPik.getText().toString());
@@ -203,7 +201,7 @@ public class MainActivity extends BaseActivity {
 			int val = Integer.parseInt(temcommand[3]);
 			String strtem = gameInfo.getString("user_setting", "");
 			try {
-				JSONArray jsa = new JSONArray();
+				JSONArray jsa = new JSONArray(strtem);
 				for (int i = 0; i < jsa.length(); i++) {
 					JSONObject obj = jsa.getJSONObject(i);
 					if (obj.getInt("pik") == pik) {
