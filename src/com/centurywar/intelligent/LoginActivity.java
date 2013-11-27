@@ -67,6 +67,9 @@ public class LoginActivity extends BaseActivity {
 				if (BaseControl.bluetoothMac.length() > 0) {
 					initBlueTooth();
 				}
+				gameInfo.edit()
+						.putString("user_setting", jsonobj.getString("device"))
+						.commit();
 				initJPUSHAlias(jsonobj.getString("username"));
 				Intent intent = new Intent();
 				intent.setClass(getApplicationContext(), MainActivity.class);

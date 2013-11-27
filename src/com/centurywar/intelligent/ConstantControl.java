@@ -16,6 +16,11 @@ public class ConstantControl {
 	public static String ECHO_UPDAT_DEVICE_TO_SERVER = "eudts";
 	
 	
+	// 同步用户的信息到网上
+	public static String GET_USER_DEVICE_LIST = "gudl";
+	public static String ECHO_GET_USER_DEVICE_LIST = "egudl";
+	
+	
 	// 设置用户传感器状态
 	public static String SET_STATUS = "ss";
 	public static String ECHO_SET_STATUS = "ess";
