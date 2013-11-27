@@ -10,6 +10,12 @@ public class ConstantControl {
 	public static String GET_USER_TEMPERATURE = "gut";
 	public static String ECHO_GET_USER_TEMPERATURE = "egut";
 	
+	
+	// 同步用户的信息到网上
+	public static String UPDAT_DEVICE_TO_SERVER = "udts";
+	public static String ECHO_UPDAT_DEVICE_TO_SERVER = "eudts";
+	
+	
 	// 设置用户传感器状态
 	public static String SET_STATUS = "ss";
 	public static String ECHO_SET_STATUS = "ess";

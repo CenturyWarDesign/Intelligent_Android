@@ -65,6 +65,7 @@ public class MainActivity extends BaseActivity {
 				gameInfo.edit().putString("user_setting", "").commit();
 				try {
 					updateword();
+					updateDeviceToServer();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -145,6 +146,7 @@ public class MainActivity extends BaseActivity {
 				editPik.setText("");
 				try {
 					updateword();
+					updateDeviceToServer();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -221,6 +223,21 @@ public class MainActivity extends BaseActivity {
 
 		}
 
+	}
+	
+	/**
+	 * 把本地配置同步到网上
+	 */
+	private void updateDeviceToServer() {
+		JSONObject jsob = new JSONObject();
+		try {
+			jsob.put("control", ConstantControl.UPDAT_DEVICE_TO_SERVER);
+			JSONArray jsa = new JSONArray(
+					gameInfo.getString("user_setting", ""));
+			jsob.put("device", jsa);
+		} catch (Exception e) {
+		}
+		sendMessage(jsob);
 	}
 
 	private void updateword() throws Exception {
