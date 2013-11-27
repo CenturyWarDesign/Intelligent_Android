@@ -251,7 +251,7 @@ public class MainActivity extends BaseActivity {
 				}
 			});
 			final TextView temtext = new TextView(this);
-			temtext.setText(String.format("名称：%s 针脚：%d 状态：%s",
+			temtext.setText(String.format("%s [%d] %s",
 					obj.getString("name"), obj.getInt("pik"),
 					obj.getInt("value") == 0 ? "关闭" : "打开"));
 			tr.addView(temtext);
