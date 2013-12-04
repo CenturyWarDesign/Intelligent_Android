@@ -1,6 +1,9 @@
 package com.centurywar.intelligent;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -39,21 +42,17 @@ public class MainActivity extends BaseActivity {
 	protected SharedPreferences gameInfo;
 	private int maxlight = 255, currentlight = 0;
 	private BaseControl tembc;
+	private List<Integer> statusChange=new ArrayList<Integer>();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		btnAdd = (Button) findViewById(R.id.btnAdd);
-		btnGame1 = (Button) findViewById(R.id.btngame1);
 		btnClear = (Button) findViewById(R.id.btnClear);
-		btnGetTem = (Button) findViewById(R.id.btnGetTem);
-		btnSocket = (Button) findViewById(R.id.btnSocket);
-		btnSocketSend = (Button) findViewById(R.id.btnSocketSend);
 		editName = (EditText) findViewById(R.id.editName);
 		editPik = (EditText) findViewById(R.id.editPik);
 		table = (TableLayout) findViewById(R.id.layoutBtn);
 		txtError = (TextView) findViewById(R.id.txtError);
-		txtSocket = (TextView) findViewById(R.id.txtSocket);
 		lightRate = (TextView) findViewById(R.id.lightRate);
 		gameInfo = getSharedPreferences("gameInfo", 0);
 		lightBar = (SeekBar) findViewById(R.id.lightBar);
@@ -63,60 +62,12 @@ public class MainActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				gameInfo.edit().putString("user_setting", "").commit();
-				try {
-					updateword();
-					updateDeviceToServer();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-		btnGame1.setOnClickListener(new Button.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				sendMessage(getJsonobject(10, 1, 3, 2));
-			}
-		});
-		
-		btnSocket.setOnClickListener(new Button.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-//				tembc = new BaseControl(mac);
-//				isInit=true;
-				JSONObject jsob = new JSONObject();
-				try {
-					jsob.put("control", ConstantControl.CHECK_USERNAME_PASSWORD);
-					jsob.put("username", "wanbin");
-					jsob.put("password", "wanbin");
-				} catch (Exception e) {
-				}
-				sendMessage(jsob);
-//				Amarino.connect(getApplicationContext(), mac);
-			}
-		});
-		
-
-		
-		btnSocketSend.setOnClickListener(new Button.OnClickListener() {
-			@Override
-			public void onClick(View v) {
+				updateword();
+				updateDeviceToServer();
 			}
 		});
 		
 		
-		//取得当前温度
-		btnGetTem.setOnClickListener(new Button.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				System.out.println("getTem");
-				JSONObject jsob = new JSONObject();
-				try {
-					jsob.put("control", ConstantControl.GET_USER_TEMPERATURE);
-				} catch (Exception e) {
-				}
-				sendMessage(jsob);
-			}
-		});
 
 		btnAdd.setOnClickListener(new Button.OnClickListener() {
 			@Override
@@ -200,6 +151,9 @@ public class MainActivity extends BaseActivity {
 			String[] temcommand = str.split("_");
 			// r_10_3_1_0
 			int pik = Integer.parseInt(temcommand[2]);
+			if (statusChange.contains(pik)) {
+				statusChange.remove(statusChange.indexOf(pik));
+			}
 			int val = Integer.parseInt(temcommand[3]);
 			String strtem = gameInfo.getString("user_setting", "");
 			try {
@@ -215,11 +169,7 @@ public class MainActivity extends BaseActivity {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			try {
-				updateword();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			updateword();
 
 		}
 
@@ -240,7 +190,8 @@ public class MainActivity extends BaseActivity {
 		sendMessage(jsob);
 	}
 
-	private void updateword() throws Exception {
+	private void updateword()  {
+		try{
 		JSONArray  jsa = new JSONArray( gameInfo.getString("user_setting", ""));
 		table.removeAllViews();
 		for (int n = 0; n < jsa.length(); n++) {
@@ -257,22 +208,34 @@ public class MainActivity extends BaseActivity {
 				}
 			});
 			Button close = new Button(this);
-			close.setText("close");
-			open.setTag(pik);
-			close.setOnClickListener(new Button.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					setControl(0 + pik * 10);
+				close.setText("close");
+				open.setTag(pik);
+				close.setOnClickListener(new Button.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						setControl(0 + pik * 10);
+					}
+				});
+				final TextView temtext = new TextView(this);
+
+				String closeOrOpen = obj.getInt("value") == 0 ? "关闭" : "打开";
+				
+				if (statusChange.contains(obj.getInt("pik"))) {
+					closeOrOpen = "loading...";
+					open.setEnabled(false);
+					close.setEnabled(false);
 				}
-			});
-			final TextView temtext = new TextView(this);
-			temtext.setText(String.format("%s [%d] %s",
-					obj.getString("name"), obj.getInt("pik"),
-					obj.getInt("value") == 0 ? "关闭" : "打开"));
-			tr.addView(temtext);
-			tr.addView(open);
-			tr.addView(close);
-			table.addView(tr);
+
+				temtext.setText(String.format("%s [%d] %s",
+						obj.getString("name"), obj.getInt("pik"), closeOrOpen));
+				tr.addView(temtext);
+				tr.addView(open);
+				tr.addView(close);
+				table.addView(tr);
+			}
+		}
+		catch(Exception e){
+			System.out.println(e.toString());
 		}
 	}
 
@@ -292,8 +255,18 @@ public class MainActivity extends BaseActivity {
 		} else {
 			sendMessage(getJsonobject(10, pik, 0, 2));
 		}
+		setButtonLoading(pik);
 	}
 
+	/**
+	 * 把按键状态设置为loading
+	 * @param pik
+	 */
+	public void setButtonLoading(int pik){
+		statusChange.add(pik);
+		updateword();
+	}
+	
 	public void onResume() {
 		super.onResume();
 		if (checkBluetooth()) {

@@ -88,32 +88,4 @@
         android:layout_height="wrap_content"
         android:text="0%" />
 
-    <Button
-        android:id="@+id/btngame1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="游戏1" />
-        <Button
-        android:id="@+id/btnSocket"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="初始化" />
-        
-     <TextView
-        android:id="@+id/txtSocket"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0%" />
-     <Button
-        android:id="@+id/btnSocketSend"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="SocketSend" />
-     
-     <Button
-         android:id="@+id/btnGetTem"
-         android:layout_width="209dp"
-         android:layout_height="wrap_content"
-         android:text="取得温度" />
-
 </LinearLayout>

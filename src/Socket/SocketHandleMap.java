@@ -12,10 +12,12 @@ import android.util.Log;
 
 import com.centurywar.intelligent.BaseActivity;
 import com.centurywar.intelligent.BaseClass;
+import com.centurywar.intelligent.MessageActivity;
 
 public class SocketHandleMap extends BaseClass{
 	public static Map<String, BaseActivity> handleMap = new HashMap<String, BaseActivity>();
 	public static String sec="";
+	public static MessageActivity ma = new MessageActivity();
 	public static boolean registerActivity(BaseActivity baseActivity) {
 		String name = baseActivity.getClass().getName();
 		if (handleMap.containsKey(name)) {

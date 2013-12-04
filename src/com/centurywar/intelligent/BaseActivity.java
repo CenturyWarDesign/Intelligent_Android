@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import com.centurywar.intelligent.control.BaseControl;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.update.UmengUpdateAgent;
 
 
 
@@ -44,8 +45,13 @@ public abstract class BaseActivity extends Activity {
 		//如果是用模拟器，请把这个关闭
 		MobclickAgent.setDebugMode( true );
 		initJPUSH();
+		
 	}
 
+	protected void setUMENGUpdate() {
+		UmengUpdateAgent.update(this);
+	}
+	
 	@Override
 	protected void onResume() {
 		super.onResume();

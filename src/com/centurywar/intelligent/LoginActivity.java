@@ -48,6 +48,7 @@ public class LoginActivity extends BaseActivity {
 				sendMessage(jsob);
 			}
 		});
+        setUMENGUpdate();
     }
     
     /* ³éÏó·½·¨
