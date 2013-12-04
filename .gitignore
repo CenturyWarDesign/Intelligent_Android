@@ -27,3 +27,5 @@ proguard/
 *.ipr
 *.iws
 .idea/
+res/layout/activity_product.xml
+src/com/centurywar/intelligent/ProductActivity.java
