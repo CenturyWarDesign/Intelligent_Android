@@ -251,9 +251,9 @@ public class MainActivity extends BaseActivity {
 
 		int delay=currentlight;
 		if (status) {
-			sendMessage(getJsonobject(10, pik, 1, 2));
+			sendMessage(getJsonobject(10, pik, 1, 0));
 		} else {
-			sendMessage(getJsonobject(10, pik, 0, 2));
+			sendMessage(getJsonobject(10, pik, 0, 0));
 		}
 		setButtonLoading(pik);
 	}

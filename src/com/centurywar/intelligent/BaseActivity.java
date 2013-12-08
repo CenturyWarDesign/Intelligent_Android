@@ -1,6 +1,5 @@
 package com.centurywar.intelligent;
 
-
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -10,8 +9,6 @@ import org.json.JSONObject;
 import com.centurywar.intelligent.control.BaseControl;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
-
-
 
 import Socket.Bluetooth;
 import Socket.SocketClient;
@@ -24,14 +21,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 import cn.jpush.android.api.JPushInterface;
 
 public abstract class BaseActivity extends Activity {
 	protected SocketClient socketClient = null;
 	protected static Bluetooth blueTooth = null;
-//	protected static String mac = "20:13:09:30:14:48";
+	// protected static String mac = "20:13:09:30:14:48";
 	protected SharedPreferences gameInfo;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -41,35 +40,34 @@ public abstract class BaseActivity extends Activity {
 		if (socketClient == null) {
 			socketClient = new SocketClient();
 		}
-//		initBlueTooth();
-		//如果是用模拟器，请把这个关闭
-		MobclickAgent.setDebugMode( true );
+		// initBlueTooth();
+		// 如果是用模拟器，请把这个关闭
+		MobclickAgent.setDebugMode(true);
 		initJPUSH();
-		
+		// 保持屏幕常亮，仅此一句
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
 	}
 
 	protected void setUMENGUpdate() {
 		UmengUpdateAgent.update(this);
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
 		SocketHandleMap.registerActivity(this);
 		MobclickAgent.onResume(this);
 	}
-	
 
 	public void onPause() {
 		super.onPause();
 		MobclickAgent.onPause(this);
 	}
-	
-	
 
 	public void initBlueTooth() {
-		if (blueTooth == null&&BaseControl.bluetoothMac.length()>0) {
-			System.out.print("BlueToothMac:"+BaseControl.bluetoothMac);
+		if (blueTooth == null && BaseControl.bluetoothMac.length() > 0) {
+			System.out.print("BlueToothMac:" + BaseControl.bluetoothMac);
 			blueTooth = new Bluetooth(BaseControl.bluetoothMac);
 		}
 	}
@@ -82,6 +80,7 @@ public abstract class BaseActivity extends Activity {
 		JPushInterface.setDebugMode(true);
 		JPushInterface.init(this);
 	}
+
 	protected boolean checkBluetooth() {
 		BluetoothAdapter mBluetoothAdapter = BluetoothAdapter
 				.getDefaultAdapter();
@@ -98,13 +97,13 @@ public abstract class BaseActivity extends Activity {
 			System.out.println("jsonobj has not control string!");
 			return;
 		}
-		
+
 		try {
 			if (!jsonobj.has("username")) {
-				jsonobj.put("username",getGameInfoStr("username"));
+				jsonobj.put("username", getGameInfoStr("username"));
 			}
 			if (!jsonobj.has("sec")) {
-				jsonobj.put("sec",getGameInfoStr("sec"));
+				jsonobj.put("sec", getGameInfoStr("sec"));
 			}
 			boolean threadBlueTooth = false;
 			// 这是设置板子状态的代码，优先进行蓝牙传输
@@ -126,9 +125,10 @@ public abstract class BaseActivity extends Activity {
 		}
 
 	}
-	
+
 	/**
 	 * 返回JSONObject类型的指令
+	 * 
 	 * @param type
 	 * @param pik
 	 * @param value
@@ -150,9 +150,10 @@ public abstract class BaseActivity extends Activity {
 		}
 		return object;
 	}
-	
+
 	/**
 	 * 把JSONObject 转化为指令
+	 * 
 	 * @param obj
 	 * @return
 	 */
@@ -172,51 +173,52 @@ public abstract class BaseActivity extends Activity {
 		}
 
 	}
-	
+
 	/**
 	 * 如果需要返回值的话，在这里面进行处理
+	 * 
 	 * @param jsonobj
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public abstract void MessageCallBack(JSONObject jsonobj) throws Exception;
 
-	
 	/**
 	 * 发送Toast提示
+	 * 
 	 * @param message
 	 */
 	protected void ToastMessage(String message) {
 		Toast.makeText(BaseActivity.this, message, Toast.LENGTH_SHORT).show();
 	}
-	
+
 	// 接受时间
 	public Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			try {
 				Bundle bundle = msg.getData();
-				MessageCallBack( new JSONObject(bundle.getString("jsonobj")));
+				MessageCallBack(new JSONObject(bundle.getString("jsonobj")));
 			} catch (Exception e) {
 				System.out.println(e.toString());
 			}
 			super.handleMessage(msg);
 		}
 	};
-	
+
 	/** 设置SharePerference数据，参数String */
-	protected void setGameInfoStr(String key,String value) {
+	protected void setGameInfoStr(String key, String value) {
 		gameInfo.edit().putString(key, value).commit();
 	}
-	
+
 	/** 获取SharePerference数据，参数为key */
 	protected String getGameInfoStr(String key) {
 		return gameInfo.getString(key, "");
 	}
-	
+
 	/** 获取SharePerference数据，参数为sec序列码 */
 	protected String getSec() {
 		return getGameInfoStr("sec");
 	}
-	
+
 	/** 获取SharePerference数据，参数为username */
 	protected String getUsername() {
 		return getGameInfoStr("username");
@@ -236,6 +238,5 @@ public abstract class BaseActivity extends Activity {
 		}
 		return sb.toString();
 	}
-	
-	
+
 }
