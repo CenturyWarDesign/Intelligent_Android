@@ -56,8 +56,7 @@ public class LoginActivity extends BaseActivity {
      */
 	public void MessageCallBack(JSONObject jsonobj) throws Exception {
 		String command = jsonobj.getString("control");
-		Log.v("liuchunlong", "登陆，收到的返回报文为："+jsonobj.toString());
-		System.out.println("[liuchunlong] 收到服务器的报文："+jsonobj.toString());
+		System.out.println("收到服务器的报文："+jsonobj.toString());
 		if (null != command&&command.equals(ConstantControl.ECHO_CHECK_USERNAME_PASSWORD)) {
 			if(jsonobj.getString("retCode").equals("0000")){
 				setGameInfoStr("sec", jsonobj.getString("sec"));

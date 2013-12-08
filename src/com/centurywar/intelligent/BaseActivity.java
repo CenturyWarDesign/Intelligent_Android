@@ -15,6 +15,7 @@ import Socket.SocketClient;
 import Socket.SocketHandleMap;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -191,18 +192,34 @@ public abstract class BaseActivity extends Activity {
 		Toast.makeText(BaseActivity.this, message, Toast.LENGTH_SHORT).show();
 	}
 
-	// 接受时间
+	// 接受事件
 	public Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			try {
 				Bundle bundle = msg.getData();
-				MessageCallBack(new JSONObject(bundle.getString("jsonobj")));
+				JSONObject obj=new JSONObject(bundle.getString("jsonobj"));
+				// 如果是服务器返回的错误信息，统一在这里进行处理一下
+				if (obj.getString("control").equals(
+						ConstantControl.ECHO_SERVER_MESSAGE)) {
+					echoServerStatus(obj.getInt("code"));
+				}
+				MessageCallBack(obj);
 			} catch (Exception e) {
 				System.out.println(e.toString());
 			}
 			super.handleMessage(msg);
 		}
 	};
+	
+	private void echoServerStatus(int code) {
+		if (code == ConstantCode.USER_MORE_THAN_ONE_ERROR) {
+			ToastMessage("用户在另一个地方登录，您已经被迫下线");
+			Intent intent = new Intent();
+			intent.setClass(getApplicationContext(), LoginActivity.class);
+			startActivity(intent);
+			finish();
+		}
+	}
 
 	/** 设置SharePerference数据，参数String */
 	protected void setGameInfoStr(String key, String value) {
