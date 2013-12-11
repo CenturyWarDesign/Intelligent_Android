@@ -46,6 +46,7 @@ public class LoginActivity extends BaseActivity {
 					ToastMessage("«Î÷ÿ–¬ ‰»Î");
 				}
 				sendMessage(jsob);
+				submit.setEnabled(false);
 			}
 		});
         setUMENGUpdate();
@@ -79,6 +80,7 @@ public class LoginActivity extends BaseActivity {
 			}else{
 				ToastMessage(jsonobj.getString("memo"));
 			}
+			submit.setEnabled(true);
 		}
 //		else {
 //			setGameInfoStr("password", "");
