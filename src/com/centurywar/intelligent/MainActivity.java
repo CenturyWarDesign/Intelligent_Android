@@ -269,14 +269,34 @@ public class MainActivity extends BaseActivity {
 	
 	public void onResume() {
 		super.onResume();
-		if (checkBluetooth()) {
-			txtError.setVisibility(View.GONE);
-		} else {
-			txtError.setVisibility(View.VISIBLE);
-			txtError.setText("未打开蓝牙");
-		}
+//		if (checkBluetooth()) {
+//			txtError.setVisibility(View.GONE);
+//		} else {
+//			txtError.setVisibility(View.VISIBLE);
+//			txtError.setText("未打开蓝牙");
+//		}
 	}
 
+	
+	/**
+	 * 在主函数哦中的回调函数，每秒调用一次
+	 */
+	@Override
+	protected void addOneSec() {
+		// 使上次板子登录时间更新
+		setGameInfoInt("last_arduino_login",
+				getGameInfoInt("last_arduino_login") + 1);
+		int time = getGameInfoInt("last_arduino_login");
+		int lestTimeShow = 60;
+		if (time < lestTimeShow) {
+			txtError.setVisibility(View.GONE);
+			txtError.setText("板子连接正常");
+		} else {
+			txtError.setVisibility(View.VISIBLE);
+			txtError.setText("板子离线时间：" + (time - lestTimeShow));
+		}
+	}
+	
 	public void onPause() {
 		super.onPause();
 		finish();

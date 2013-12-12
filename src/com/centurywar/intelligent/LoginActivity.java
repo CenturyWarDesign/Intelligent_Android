@@ -64,6 +64,10 @@ public class LoginActivity extends BaseActivity {
 				setGameInfoStr("username", jsonobj.getString("username"));
 				setGameInfoStr("password", pwd);
 				BaseControl.bluetoothMac=jsonobj.getJSONObject("info").getString("bluetoothmac");
+				if (jsonobj.has("last_arduino_login")) {
+					int sec = jsonobj.getInt("last_arduino_login");
+					setGameInfoInt("last_arduino_login", sec);
+				}
 				//µÇÂ¼³É¹¦³õÊ¼»¯À¶ÑÀ
 				if (BaseControl.bluetoothMac.length() > 0) {
 					initBlueTooth();
@@ -87,4 +91,5 @@ public class LoginActivity extends BaseActivity {
 //			ToastMessage("µÇÂ½Ê§°Ü");
 //		}
 	}
+	protected void addOneSec() {};
 }

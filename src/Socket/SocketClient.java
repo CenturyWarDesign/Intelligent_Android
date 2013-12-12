@@ -2,6 +2,7 @@ package Socket;
 
 import java.io.*;
 import java.net.*;
+import java.util.Timer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -12,8 +13,8 @@ import org.json.JSONObject;
 public class SocketClient {
 //	private static final String HOST = "192.168.1.107";
 //	private static final String HOST = "192.168.1.111";
-//	 private static final String HOST = "42.121.123.185";
-	 private static final String HOST = "192.168.1.31";
+	 private static final String HOST = "42.121.123.185";
+//	 private static final String HOST = "192.168.1.31";
 	private static final int PORT = 8080;
 //	private static final int PORT = 8686;
 	private PrintWriter pw;
@@ -22,6 +23,8 @@ public class SocketClient {
 	private ExecutorService executorService;
 	private final int POOL_SIZE = 10;
 	public String sendTem = "";
+
+
 
 	public SocketClient() {
 		executorService = Executors.newFixedThreadPool(Runtime.getRuntime()
@@ -46,13 +49,15 @@ public class SocketClient {
 				}
 			}
 		}.start();
+
 	}
 
 	public boolean status() {
-		if (socket == null) {
-			return false;
+		if (!pw.checkError() && socket.isConnected() && !socket.isClosed()
+				&& socket != null) {
+			return true;
 		}
-		return socket.isConnected();
+		return false;
 	}
 
 	public final void sendMessageSocket(String message) {
@@ -77,6 +82,7 @@ public class SocketClient {
 			e.printStackTrace();
 		}
 	}
+	
 
 	/**
 	 * socket 写入

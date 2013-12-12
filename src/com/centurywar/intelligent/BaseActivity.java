@@ -3,6 +3,8 @@ package com.centurywar.intelligent;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.json.JSONObject;
 
@@ -13,6 +15,7 @@ import com.umeng.update.UmengUpdateAgent;
 import Socket.Bluetooth;
 import Socket.SocketClient;
 import Socket.SocketHandleMap;
+import Socket.SocketHeart;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
@@ -27,11 +30,13 @@ import android.widget.Toast;
 import cn.jpush.android.api.JPushInterface;
 
 public abstract class BaseActivity extends Activity {
-	protected SocketClient socketClient = null;
+	public static SocketClient socketClient = null;
 	protected static Bluetooth blueTooth = null;
 	// protected static String mac = "20:13:09:30:14:48";
 	protected SharedPreferences gameInfo;
-
+	private  Timer timer = null;
+	//发送心跳包的间隔 20秒
+	public int heartSec=2000;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -44,9 +49,15 @@ public abstract class BaseActivity extends Activity {
 		// initBlueTooth();
 		// 如果是用模拟器，请把这个关闭
 		MobclickAgent.setDebugMode(true);
-		initJPUSH();
+//		initJPUSH();
 		// 保持屏幕常亮，仅此一句
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		
+		
+		if (timer == null) {
+			timer = new Timer();
+			timer.schedule(timetask, 0, 1000);
+		}
 
 	}
 
@@ -74,7 +85,7 @@ public abstract class BaseActivity extends Activity {
 	}
 
 	public void initJPUSHAlias(String username) {
-		JPushInterface.setAlias(this, username, null);
+//		JPushInterface.setAlias(this, username, null);
 	}
 
 	public void initJPUSH() {
@@ -218,6 +229,9 @@ public abstract class BaseActivity extends Activity {
 			intent.setClass(getApplicationContext(), LoginActivity.class);
 			startActivity(intent);
 			finish();
+		} else if (code == ConstantCode.USER_ARDUINO_LOGIN) {
+			System.out.println("板子登录");
+			setGameInfoInt("last_arduino_login", 0);
 		}
 	}
 
@@ -225,11 +239,22 @@ public abstract class BaseActivity extends Activity {
 	protected void setGameInfoStr(String key, String value) {
 		gameInfo.edit().putString(key, value).commit();
 	}
+	
+	/** 设置SharePerference数据，参数String */
+	protected void setGameInfoInt(String key, int value) {
+		gameInfo.edit().putInt(key, value).commit();
+	}
 
 	/** 获取SharePerference数据，参数为key */
 	protected String getGameInfoStr(String key) {
 		return gameInfo.getString(key, "");
 	}
+
+	/** 获取SharePerference数据，参数为key */
+	protected int getGameInfoInt(String key) {
+		return gameInfo.getInt(key, 0);
+	}
+
 
 	/** 获取SharePerference数据，参数为sec序列码 */
 	protected String getSec() {
@@ -255,5 +280,29 @@ public abstract class BaseActivity extends Activity {
 		}
 		return sb.toString();
 	}
+	
+	// 接受时间
+	Handler handlerTimer = new Handler() {
+		public void handleMessage(Message msg) {
+			addOneSec();
+			super.handleMessage(msg);
+		}
+	};
 
+	// 传递时间
+	private TimerTask timetask = new TimerTask() {
+		public void run() {
+			Message message = new Message();
+			message.what = 1;
+			handlerTimer.sendMessage(message);
+		}
+	};
+
+
+
+	/**
+	 * 在主函数哦中的回调函数，每秒调用一次
+	 */
+	protected abstract void addOneSec();
+	
 }

@@ -36,4 +36,7 @@ public class MessageActivity extends BaseActivity {
 	public void connectError() {
 
 	}
+	protected void addOneSec() {
+		
+	}
 }
