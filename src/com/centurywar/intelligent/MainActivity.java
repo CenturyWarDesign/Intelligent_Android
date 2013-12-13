@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.centurywar.intelligent.control.BaseControl;
@@ -15,6 +16,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnFocusChangeListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
@@ -191,23 +193,27 @@ public class MainActivity extends BaseActivity {
 	}
 
 	private void updateword()  {
-		try{
-		JSONArray  jsa = new JSONArray( gameInfo.getString("user_setting", ""));
-		table.removeAllViews();
-		for (int n = 0; n < jsa.length(); n++) {
-			JSONObject obj = jsa.getJSONObject(n);
-			TableRow tr = new TableRow(this);
-			final int pik = obj.getInt("pik");
-			Button open = new Button(this);
-			open.setText("open");
-			open.setTag(pik);
-			open.setOnClickListener(new Button.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					setControl(1 + pik * 10);
+		try {
+			JSONArray jsa = new JSONArray(
+					gameInfo.getString("user_setting", ""));
+			table.removeAllViews();
+			for (int n = 0; n < jsa.length(); n++) {
+				JSONObject obj = jsa.getJSONObject(n);
+				if (jsa.getJSONObject(n) == null) {
+					continue;
 				}
-			});
-			Button close = new Button(this);
+				TableRow tr = new TableRow(this);
+				final int pik = obj.getInt("pik");
+				Button open = new Button(this);
+				open.setText("open");
+				open.setTag(pik);
+				open.setOnClickListener(new Button.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						setControl(1 + pik * 10);
+					}
+				});
+				Button close = new Button(this);
 				close.setText("close");
 				open.setTag(pik);
 				close.setOnClickListener(new Button.OnClickListener() {
@@ -216,30 +222,97 @@ public class MainActivity extends BaseActivity {
 						setControl(0 + pik * 10);
 					}
 				});
-				final TextView temtext = new TextView(this);
+				
+				Button remove = new Button(this);
+				remove.setText("移除");
+				remove.setTag(pik);
+				remove.setOnClickListener(new Button.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						removeControl(pik);
+					}
+				});
+				
+				final EditText temtext = new EditText(this);
+
+				temtext.setText(obj.getString("name"));
+				
+				final TextView statustext = new TextView(this);
 
 				String closeOrOpen = obj.getInt("value") == 0 ? "关闭" : "打开";
-				
+
 				if (statusChange.contains(obj.getInt("pik"))) {
 					closeOrOpen = "loading...";
 					open.setEnabled(false);
 					close.setEnabled(false);
 				}
+				
+				
+				temtext.setOnFocusChangeListener(new OnFocusChangeListener() {
+					public void onFocusChange(View v, boolean hasFocus) {
+						// hasFocus?
+						changeNameControl(pik,((EditText)v).getText().toString().trim());
+					}
+				});
 
-				temtext.setText(String.format("%s [%d] %s",
-						obj.getString("name"), obj.getInt("pik"), closeOrOpen));
+				statustext.setText(String.format("[%d] %s",
+						obj.getInt("pik"), closeOrOpen));
+				
 				tr.addView(temtext);
+				tr.addView(statustext);
 				tr.addView(open);
 				tr.addView(close);
+				tr.addView(remove);
 				table.addView(tr);
 			}
-		}
-		catch(Exception e){
+		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
 	}
 
+	private void removeControl(int pik) {
+		try {
+			JSONArray jsa = new JSONArray(
+					gameInfo.getString("user_setting", ""));
+			JSONArray jsatem = new JSONArray();
+			for (int i = 0; i < jsa.length(); i++) {
+				final int bepik = jsa.getJSONObject(i).getInt("pik");
+				if (bepik != pik) {
+					jsatem.put(jsa.getJSONObject(i));
+				}
+			}
+			gameInfo.edit().putString("user_setting", jsatem.toString())
+					.commit();
+			updateword();
+			updateDeviceToServer();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
+	private void changeNameControl(int pik, String name) {
+		try {
+			JSONArray jsa = new JSONArray(
+					gameInfo.getString("user_setting", ""));
+			boolean ischange = false;
+			for (int i = 0; i < jsa.length(); i++) {
+				final int bepik = jsa.getJSONObject(i).getInt("pik");
+				if (bepik == pik
+						&& !jsa.getJSONObject(i).getString("name").equals(name)) {
+					jsa.getJSONObject(i).put("name", name);
+					ischange = true;
+				}
+			}
+			if (ischange) {
+				gameInfo.edit().putString("user_setting", jsa.toString())
+						.commit();
+				updateword();
+				updateDeviceToServer();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	private void setControl(int getstatus) {
 		int pik = getstatus / 10;
