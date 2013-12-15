@@ -16,6 +16,7 @@ public class LoginActivity extends BaseActivity {
 	private EditText username;
 	private EditText password;
 	private Button submit;
+	private Button btnreg;
 	private String pwd;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,27 +31,50 @@ public class LoginActivity extends BaseActivity {
         if(null!=getGameInfoStr("password")){
         	password.setText(getGameInfoStr("password"));
         }
-        submit		= (Button)findViewById(R.id.signin_button);
-        submit.setOnClickListener(new Button.OnClickListener() {
+        
+		submit = (Button) findViewById(R.id.signin_button);
+		submit.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				// socketClient.sendMessageSocket("control_cup_"+userName+"_"+"7a941492a0dc743544ebc71c89370a64");
 				JSONObject jsob = new JSONObject();
 				try {
-					jsob.put("control", "cup");
+					jsob.put("control", ConstantControl.CHECK_USERNAME_PASSWORD);
 					jsob.put("username", username.getText().toString().trim());
-					jsob.put("password", BaseClass.MD5(password.getText().toString().trim()));
+					jsob.put("password",
+							BaseClass.MD5(password.getText().toString().trim()));
 					pwd = password.getText().toString().trim();
 				} catch (Exception e) {
-					System.out.println("登陆时候出现异常"+e.getMessage());
+					System.out.println("登陆时候出现异常" + e.getMessage());
 					ToastMessage("请重新输入");
 				}
 				sendMessage(jsob);
 				submit.setEnabled(false);
 			}
 		});
-        setUMENGUpdate();
-    }
+        
+		btnreg = (Button) findViewById(R.id.btnReg);
+		btnreg.setOnClickListener(new Button.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// socketClient.sendMessageSocket("control_cup_"+userName+"_"+"7a941492a0dc743544ebc71c89370a64");
+				JSONObject jsob = new JSONObject();
+				try {
+					jsob.put("control", ConstantControl.REG_USERNAME_PASSWORD);
+					jsob.put("username", username.getText().toString().trim());
+					jsob.put("password",
+							BaseClass.MD5(password.getText().toString().trim()));
+					pwd = password.getText().toString().trim();
+				} catch (Exception e) {
+					System.out.println("登陆时候出现异常" + e.getMessage());
+					ToastMessage("请重新输入");
+				}
+				sendMessage(jsob);
+				btnreg.setEnabled(false);
+			}
+		});
+		setUMENGUpdate();
+	}
     
     /* 抽象方法
      * @see com.centurywar.intelligent.BaseActivity#MessageCallBack(net.sf.json.JSONObject)
@@ -64,7 +88,10 @@ public class LoginActivity extends BaseActivity {
 				setGameInfoInt("mode", jsonobj.getJSONObject("info").getInt("mode"));
 				setGameInfoStr("username", jsonobj.getString("username"));
 				setGameInfoStr("password", pwd);
-				BaseControl.bluetoothMac=jsonobj.getJSONObject("info").getString("bluetoothmac");
+				if (jsonobj.getJSONObject("info").has("bluetoothmac")) {
+					BaseControl.bluetoothMac = jsonobj.getJSONObject("info")
+							.getString("bluetoothmac");
+				}
 				if (jsonobj.has("last_arduino_login")) {
 					int sec = jsonobj.getInt("last_arduino_login");
 					setGameInfoInt("last_arduino_login", sec);
@@ -96,6 +123,7 @@ public class LoginActivity extends BaseActivity {
 	
 	public void StatusCallBack(JSONObject jsonobj) throws Exception {
 		submit.setEnabled(true);
+		btnreg.setEnabled(true);
 	}
 	
 	protected void addOneSec() {};

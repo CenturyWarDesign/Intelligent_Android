@@ -253,6 +253,12 @@ public abstract class BaseActivity extends Activity {
 		} else if (code == ConstantCode.USER_OR_PASSWORD_ERROR) {
 			ToastMessage("用户名或密码错误");
 		}
+		else if (code == ConstantCode.USER_OR_PASSWORD_CANT_USE) {
+			ToastMessage("用户名不可用");
+		}
+		else if (code == ConstantCode.USER_REG_SUCCESS) {
+			ToastMessage("注册成功");
+		}
 	}
 
 	/** 设置SharePerference数据，参数String */

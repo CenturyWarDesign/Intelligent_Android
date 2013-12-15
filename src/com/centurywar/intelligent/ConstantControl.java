@@ -6,6 +6,10 @@ public class ConstantControl {
 	public static String ECHO_CHECK_USERNAME_PASSWORD = "ecup";
 	
 	
+	// 用户注册
+	public static String REG_USERNAME_PASSWORD = "rup";
+	public static String ECHO_REG_USERNAME_PASSWORD = "rcup";
+	
 	// 取得用户温度信息
 	public static String GET_USER_TEMPERATURE = "gut";
 	public static String ECHO_GET_USER_TEMPERATURE = "egut";
