@@ -25,6 +25,13 @@ public class ConstantControl {
 	public static String SET_STATUS = "ss";
 	public static String ECHO_SET_STATUS = "ess";
 
+	
+	// 设置用户的模式
+	public static String UPDAT_USER_MODE = "uum";
+	public static String ECHO_UPDAT_USER_MODE = "euum";
+	
+
+	
 	//输出服务器的错误信息
 	public static String ECHO_SERVER_MESSAGE = "esm";
 	
@@ -42,4 +49,10 @@ public class ConstantControl {
 	//控制指令（必须要有以下内容；type,pik,value,data）
 	public static String CONTROL_DEVICE = "cd";
 	public static String ECHO_CONTROL_DEVICE = "ecd";
+	
+	
+	// 正常模式
+	public static int MODE_DEFAULT = 1;
+	// 外出模式
+	public static int MODE_OUT = 2;
 }

@@ -18,9 +18,11 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -44,6 +46,7 @@ public class MainActivity extends BaseActivity {
 	protected SharedPreferences gameInfo;
 	private int maxlight = 255, currentlight = 0;
 	private BaseControl tembc;
+	private Switch switchTest;
 	private List<Integer> statusChange=new ArrayList<Integer>();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +62,18 @@ public class MainActivity extends BaseActivity {
 		gameInfo = getSharedPreferences("gameInfo", 0);
 		lightBar = (SeekBar) findViewById(R.id.lightBar);
 		
+		switchTest = (Switch) findViewById(R.id.switch1);
+		switchTest
+				.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+					@Override
+					public void onCheckedChanged(CompoundButton buttonView,
+							boolean isChecked) {
+						updateUserMode(isChecked ? 2 : 1);
+					}
+				});
+
+		int mode = getGameInfoInt("mode");
+		switchTest.setChecked(mode==ConstantControl.MODE_OUT?true:false);
 		
 		btnClear.setOnClickListener(new Button.OnClickListener() {
 			@Override
@@ -190,6 +205,22 @@ public class MainActivity extends BaseActivity {
 		} catch (Exception e) {
 		}
 		sendMessage(jsob);
+	}
+
+	/**
+	 * 更新用户的模式
+	 * 
+	 * @param mode
+	 */
+	private void updateUserMode(int mode) {
+		JSONObject jsob = new JSONObject();
+		try {
+			jsob.put("control", ConstantControl.UPDAT_USER_MODE);
+			jsob.put("mode", mode);
+			sendMessage(jsob);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
 	}
 
 	private void updateword()  {

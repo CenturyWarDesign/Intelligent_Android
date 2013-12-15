@@ -61,6 +61,7 @@ public class LoginActivity extends BaseActivity {
 		if (null != command&&command.equals(ConstantControl.ECHO_CHECK_USERNAME_PASSWORD)) {
 			if(jsonobj.getString("retCode").equals("0000")){
 				setGameInfoStr("sec", jsonobj.getString("sec"));
+				setGameInfoInt("mode", jsonobj.getJSONObject("info").getInt("mode"));
 				setGameInfoStr("username", jsonobj.getString("username"));
 				setGameInfoStr("password", pwd);
 				BaseControl.bluetoothMac=jsonobj.getJSONObject("info").getString("bluetoothmac");

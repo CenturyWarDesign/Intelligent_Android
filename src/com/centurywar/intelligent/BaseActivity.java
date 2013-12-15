@@ -37,6 +37,8 @@ public abstract class BaseActivity extends Activity {
 	private  Timer timer = null;
 	//发送心跳包的间隔 20秒
 	public int heartSec=2000;
+//	private boolean useJpush=true;
+	private boolean useJpush=false;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -49,7 +51,7 @@ public abstract class BaseActivity extends Activity {
 		// initBlueTooth();
 		// 如果是用模拟器，请把这个关闭
 		MobclickAgent.setDebugMode(true);
-//		initJPUSH();
+		initJPUSH();
 		// 保持屏幕常亮，仅此一句
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		
@@ -75,6 +77,7 @@ public abstract class BaseActivity extends Activity {
 	public void onPause() {
 		super.onPause();
 		MobclickAgent.onPause(this);
+		
 	}
 
 	public void initBlueTooth() {
@@ -85,12 +88,16 @@ public abstract class BaseActivity extends Activity {
 	}
 
 	public void initJPUSHAlias(String username) {
-//		JPushInterface.setAlias(this, username, null);
+		if (useJpush) {
+			JPushInterface.setAlias(this, username, null);
+		}
 	}
 
 	public void initJPUSH() {
-		JPushInterface.setDebugMode(true);
-		JPushInterface.init(this);
+		if (useJpush) {
+			JPushInterface.setDebugMode(true);
+			JPushInterface.init(this);
+		}
 	}
 
 	protected boolean checkBluetooth() {
@@ -232,6 +239,9 @@ public abstract class BaseActivity extends Activity {
 		} else if (code == ConstantCode.USER_ARDUINO_LOGIN) {
 			System.out.println("板子登录");
 			setGameInfoInt("last_arduino_login", 0);
+		}
+		else if (code == ConstantCode.USER_Mode_UPDATE_OK) {
+			ToastMessage("更新模式成功");
 		}
 	}
 
