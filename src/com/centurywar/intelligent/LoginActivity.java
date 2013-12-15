@@ -85,12 +85,18 @@ public class LoginActivity extends BaseActivity {
 			}else{
 				ToastMessage(jsonobj.getString("memo"));
 			}
-			submit.setEnabled(true);
+		
 		}
 //		else {
 //			setGameInfoStr("password", "");
 //			ToastMessage("µÇÂ½Ê§°Ü");
 //		}
 	}
+
+	
+	public void StatusCallBack(JSONObject jsonobj) throws Exception {
+		submit.setEnabled(true);
+	}
+	
 	protected void addOneSec() {};
 }

@@ -39,4 +39,7 @@ public class MessageActivity extends BaseActivity {
 	protected void addOneSec() {
 		
 	}
+	public void StatusCallBack(JSONObject jsonobj) throws Exception {
+
+	}
 }

@@ -200,6 +200,14 @@ public abstract class BaseActivity extends Activity {
 	 * @throws Exception
 	 */
 	public abstract void MessageCallBack(JSONObject jsonobj) throws Exception;
+	
+	/**
+	 * 如果需要返回值的话，在这里面进行处理
+	 * 
+	 * @param jsonobj
+	 * @throws Exception
+	 */
+	public abstract void StatusCallBack(JSONObject jsonobj) throws Exception;
 
 	/**
 	 * 发送Toast提示
@@ -215,11 +223,12 @@ public abstract class BaseActivity extends Activity {
 		public void handleMessage(Message msg) {
 			try {
 				Bundle bundle = msg.getData();
-				JSONObject obj=new JSONObject(bundle.getString("jsonobj"));
+				JSONObject obj = new JSONObject(bundle.getString("jsonobj"));
 				// 如果是服务器返回的错误信息，统一在这里进行处理一下
 				if (obj.getString("control").equals(
 						ConstantControl.ECHO_SERVER_MESSAGE)) {
 					echoServerStatus(obj.getInt("code"));
+					StatusCallBack(obj);
 				}
 				MessageCallBack(obj);
 			} catch (Exception e) {
@@ -239,9 +248,10 @@ public abstract class BaseActivity extends Activity {
 		} else if (code == ConstantCode.USER_ARDUINO_LOGIN) {
 			System.out.println("板子登录");
 			setGameInfoInt("last_arduino_login", 0);
-		}
-		else if (code == ConstantCode.USER_Mode_UPDATE_OK) {
+		} else if (code == ConstantCode.USER_Mode_UPDATE_OK) {
 			ToastMessage("更新模式成功");
+		} else if (code == ConstantCode.USER_OR_PASSWORD_ERROR) {
+			ToastMessage("用户名或密码错误");
 		}
 	}
 

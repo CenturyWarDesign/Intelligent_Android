@@ -418,7 +418,9 @@ public class MainActivity extends BaseActivity {
 		// do never forget to unregister a registered receiver
 	}
 	
-	
+	public void StatusCallBack(JSONObject jsonobj) throws Exception {
+
+	}
 
 }
 
