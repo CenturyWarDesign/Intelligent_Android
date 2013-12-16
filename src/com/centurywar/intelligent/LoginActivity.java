@@ -85,25 +85,6 @@ public class LoginActivity extends BaseActivity {
 		if (null != command&&command.equals(ConstantControl.ECHO_CHECK_USERNAME_PASSWORD)) {
 			if(jsonobj.getString("retCode").equals("0000")){
 				setGameInfoStr("sec", jsonobj.getString("sec"));
-				setGameInfoInt("mode", jsonobj.getJSONObject("info").getInt("mode"));
-				setGameInfoStr("username", jsonobj.getString("username"));
-				setGameInfoStr("password", pwd);
-				if (jsonobj.getJSONObject("info").has("bluetoothmac")) {
-					BaseControl.bluetoothMac = jsonobj.getJSONObject("info")
-							.getString("bluetoothmac");
-				}
-				if (jsonobj.has("last_arduino_login")) {
-					int sec = jsonobj.getInt("last_arduino_login");
-					setGameInfoInt("last_arduino_login", sec);
-				}
-				//登录成功初始化蓝牙
-				if (BaseControl.bluetoothMac.length() > 0) {
-					initBlueTooth();
-				}
-				gameInfo.edit()
-						.putString("user_setting", jsonobj.getString("device"))
-						.commit();
-				initJPUSHAlias(jsonobj.getString("username"));
 				Intent intent = new Intent();
 				intent.setClass(getApplicationContext(), MainActivity.class);
 				startActivity(intent);

@@ -16,6 +16,9 @@ public class ConstantCode {
 	public static int USER_OR_PASSWORD_CANT_USE = 20003;
 	// 用户注册成功
 	public static int USER_REG_SUCCESS = 20004;
+	
+	// 自动获取arudinoid
+	public static int AUTO_GET_ARDUINO_ID_SUCCESS = 20005;
 
 	// arduino 登录
 	public static int USER_ARDUINO_LOGIN = 30001;

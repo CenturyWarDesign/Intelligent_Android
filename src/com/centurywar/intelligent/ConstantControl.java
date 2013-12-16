@@ -14,10 +14,18 @@ public class ConstantControl {
 	public static String GET_USER_TEMPERATURE = "gut";
 	public static String ECHO_GET_USER_TEMPERATURE = "egut";
 	
+	// 取得用户所有信息
+	public static String GET_USER_INFO = "gui";
+	public static String ECHO_GET_USER_INFOE = "egui";
 	
 	// 同步用户的信息到网上
 	public static String UPDAT_DEVICE_TO_SERVER = "udts";
 	public static String ECHO_UPDAT_DEVICE_TO_SERVER = "eudts";
+	
+	
+	//自动匹配客户端
+	public static String AUTO_GET_ARUDINO_ID = "agai";
+	public static String ECHO_AUTO_GET_ARUDINO_ID = "eagai";
 	
 	
 	// 同步用户的信息到网上

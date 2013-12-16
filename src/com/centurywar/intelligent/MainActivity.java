@@ -38,6 +38,7 @@ public class MainActivity extends BaseActivity {
 	private Button btnGetTem;
 	private EditText editName;
 	private TextView txtSocket;
+	private TextView txtAutoRemain;
 	private EditText editPik;
 	private TableLayout table;
 	private TextView txtError;
@@ -47,6 +48,11 @@ public class MainActivity extends BaseActivity {
 	private int maxlight = 255, currentlight = 0;
 	private BaseControl tembc;
 	private Switch switchTest;
+	private Switch switchAuto;
+	/**
+	 * 自动匹配板子倒计时
+	 */
+	private int autoRemainSec=0;
 	private List<Integer> statusChange=new ArrayList<Integer>();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +65,7 @@ public class MainActivity extends BaseActivity {
 		table = (TableLayout) findViewById(R.id.layoutBtn);
 		txtError = (TextView) findViewById(R.id.txtError);
 		lightRate = (TextView) findViewById(R.id.lightRate);
+		txtAutoRemain = (TextView) findViewById(R.id.autoText);
 		gameInfo = getSharedPreferences("gameInfo", 0);
 		lightBar = (SeekBar) findViewById(R.id.lightBar);
 		
@@ -71,7 +78,18 @@ public class MainActivity extends BaseActivity {
 						updateUserMode(isChecked ? 2 : 1);
 					}
 				});
-
+		switchAuto = (Switch) findViewById(R.id.switch2);
+		switchAuto
+				.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+					@Override
+					public void onCheckedChanged(CompoundButton buttonView,
+							boolean isChecked) {
+						if (switchAuto.isChecked()) {
+							autoArduino();
+							switchAuto.setChecked(true);
+						}
+					}
+				});
 		int mode = getGameInfoInt("mode");
 		switchTest.setChecked(mode==ConstantControl.MODE_OUT?true:false);
 		
@@ -156,9 +174,8 @@ public class MainActivity extends BaseActivity {
 	
 	public void MessageCallBack(JSONObject jsonobj) throws Exception {
 		String command = jsonobj.getString("control");
-		Log.i("liuchunlong", "MainActivity收到的返回报文为：" + jsonobj.toString());
-		if (command.equals(ConstantControl.ECHO_CHECK_USERNAME_PASSWORD)) {
-			// 验证用户名密码
+		if (command.equals(ConstantControl.GET_USER_INFO)) {
+			updateword();
 		} else if (command.equals(ConstantControl.ECHO_GET_USER_TEMPERATURE)) {
 			// 取得温度
 			JSONObject tem = (JSONObject) jsonobj.getJSONArray("data").get(0);
@@ -207,6 +224,16 @@ public class MainActivity extends BaseActivity {
 		sendMessage(jsob);
 	}
 
+	
+	/**
+	 * 自动匹配arudion
+	 */
+	private void autoArduino() {
+		autoRemainSec = 10;
+		sendControl(ConstantControl.AUTO_GET_ARUDINO_ID, null);
+	}
+	
+	
 	/**
 	 * 更新用户的模式
 	 * 
@@ -399,6 +426,16 @@ public class MainActivity extends BaseActivity {
 			txtError.setVisibility(View.VISIBLE);
 			txtError.setText("板子离线时间：" + (time - lestTimeShow));
 		}
+		
+		
+		if (autoRemainSec > 0) {
+			autoRemainSec--;
+			txtAutoRemain.setText(autoRemainSec+"");
+		} else {
+			txtAutoRemain.setText("");
+			switchAuto.setChecked(false);
+		}
+		
 	}
 	
 	public void onPause() {
@@ -419,7 +456,11 @@ public class MainActivity extends BaseActivity {
 	}
 	
 	public void StatusCallBack(JSONObject jsonobj) throws Exception {
-
+		int code = jsonobj.getInt("code");
+		if (code == ConstantCode.AUTO_GET_ARDUINO_ID_SUCCESS) {
+			autoRemainSec = 0;
+			sendControl(ConstantControl.GET_USER_INFO, null);
+		}
 	}
 
 }

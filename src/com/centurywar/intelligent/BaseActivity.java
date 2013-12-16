@@ -127,7 +127,7 @@ public abstract class BaseActivity extends Activity {
 			boolean threadBlueTooth = false;
 			// 这是设置板子状态的代码，优先进行蓝牙传输
 			if (jsonobj.getString("control").equals(ConstantControl.SET_STATUS)
-					&& blueTooth.getStatus()) {
+					&&blueTooth!=null&& blueTooth.getStatus()) {
 				String contrl = getSendStringFromJsonObject(jsonobj);
 				if (contrl.length() > 0) {
 					blueTooth.ContentWrite(contrl);
@@ -229,7 +229,14 @@ public abstract class BaseActivity extends Activity {
 						ConstantControl.ECHO_SERVER_MESSAGE)) {
 					echoServerStatus(obj.getInt("code"));
 					StatusCallBack(obj);
+				} else if (obj.getString("control").equals(
+						ConstantControl.ECHO_CHECK_USERNAME_PASSWORD)
+						|| obj.getString("control").equals(
+								ConstantControl.GET_USER_INFO)) {
+					//这里初始化用户信息
+					initUserInfoFromServer(obj);
 				}
+
 				MessageCallBack(obj);
 			} catch (Exception e) {
 				System.out.println(e.toString());
@@ -252,12 +259,12 @@ public abstract class BaseActivity extends Activity {
 			ToastMessage("更新模式成功");
 		} else if (code == ConstantCode.USER_OR_PASSWORD_ERROR) {
 			ToastMessage("用户名或密码错误");
-		}
-		else if (code == ConstantCode.USER_OR_PASSWORD_CANT_USE) {
+		} else if (code == ConstantCode.USER_OR_PASSWORD_CANT_USE) {
 			ToastMessage("用户名不可用");
-		}
-		else if (code == ConstantCode.USER_REG_SUCCESS) {
+		} else if (code == ConstantCode.USER_REG_SUCCESS) {
 			ToastMessage("注册成功");
+		} else if (code == ConstantCode.AUTO_GET_ARDUINO_ID_SUCCESS) {
+			ToastMessage("自动获取ARDUINOID成功");
 		}
 	}
 
@@ -331,4 +338,45 @@ public abstract class BaseActivity extends Activity {
 	 */
 	protected abstract void addOneSec();
 	
+	/**
+	 * 直接发送服务器命令
+	 * @param control
+	 * @param obj 可以填null
+	 */
+	protected void sendControl(String control, JSONObject obj) {
+		try {
+			if (obj == null) {
+				obj = new JSONObject();
+			}
+			obj.put("control", control);
+		} catch (Exception e) {
+		}
+		sendMessage(obj);
+	}
+	
+	protected void initUserInfoFromServer(JSONObject jsonobj) {
+		try {
+			setGameInfoInt("mode", jsonobj.getJSONObject("info").getInt("mode"));
+			setGameInfoStr("username", jsonobj.getString("username"));
+			if (jsonobj.getJSONObject("info").has("bluetoothmac")) {
+				BaseControl.bluetoothMac = jsonobj.getJSONObject("info")
+						.getString("bluetoothmac");
+			}
+			if (jsonobj.has("last_arduino_login")) {
+				int sec = jsonobj.getInt("last_arduino_login");
+				setGameInfoInt("last_arduino_login", sec);
+			}
+			// 登录成功初始化蓝牙
+			if (BaseControl.bluetoothMac.length() > 0) {
+				initBlueTooth();
+			}
+			gameInfo.edit()
+					.putString("user_setting", jsonobj.getString("device"))
+					.commit();
+			initJPUSHAlias(jsonobj.getString("username"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
 }
