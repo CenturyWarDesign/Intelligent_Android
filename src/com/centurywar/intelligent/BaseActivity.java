@@ -18,9 +18,12 @@ import Socket.SocketHandleMap;
 import Socket.SocketHeart;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -45,6 +48,12 @@ public abstract class BaseActivity extends Activity {
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		gameInfo = getSharedPreferences("gameInfo", 0);
+
+		if (!detect(BaseActivity.this)) {
+			ToastMessageLong("当前网络不可用");
+		}
+		
+		
 		if (socketClient == null) {
 			socketClient = new SocketClient();
 		}
@@ -65,6 +74,7 @@ public abstract class BaseActivity extends Activity {
 			timer.schedule(timetask, 0, 1000);
 		}
 
+		
 	}
 
 	protected void setUMENGUpdate() {
@@ -227,6 +237,10 @@ public abstract class BaseActivity extends Activity {
 	 */
 	protected void ToastMessage(String message) {
 		Toast.makeText(BaseActivity.this, message, Toast.LENGTH_SHORT).show();
+	}
+
+	protected void ToastMessageLong(String message) {
+		Toast.makeText(BaseActivity.this, message, Toast.LENGTH_LONG).show();
 	}
 
 	// 接受事件
@@ -403,5 +417,19 @@ public abstract class BaseActivity extends Activity {
 //		} catch (Exception e) {
 //			e.printStackTrace();
 //		}
+	}
+
+	public static boolean detect(Activity act) {
+		ConnectivityManager manager = (ConnectivityManager) act
+				.getApplicationContext().getSystemService(
+						Context.CONNECTIVITY_SERVICE);
+		if (manager == null) {
+			return false;
+		}
+		NetworkInfo networkinfo = manager.getActiveNetworkInfo();
+		if (networkinfo == null || !networkinfo.isAvailable()) {
+			return false;
+		}
+		return true;
 	}
 }
