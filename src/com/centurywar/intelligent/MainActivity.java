@@ -145,7 +145,7 @@ public class MainActivity extends BaseActivity {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		lightBar.setMax(60);
+		lightBar.setMax(100);
 		lightBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			public void onProgressChanged(SeekBar arg0, int progress,
 					boolean fromUser) {
@@ -153,7 +153,8 @@ public class MainActivity extends BaseActivity {
 				lightBar.setProgress(currentlight);
 				lightRate.setText(currentlight + "");
 
-				// bl.setPikType(mac, 3, 20);
+				sendMessage(getJsonobject(20, 9, (int) (currentlight*2.55), 0));
+//				 bl.setPikType(mac, 3, 20);
 				// bl.setValue(currentlight);
 			}
 

@@ -11,19 +11,18 @@ import org.json.JSONObject;
 
 
 public class SocketClient {
-//	private static final String HOST = "192.168.1.107";
-//	private static final String HOST = "192.168.1.111";
-	 private static final String HOST = "42.121.123.185";
-//	 private static final String HOST = "192.168.1.31";
+	// private static final String HOST = "192.168.1.107";
+	// private static final String HOST = "192.168.1.111";
+	// private static final String HOST = "42.121.123.185";
+	private static final String HOST = "192.168.1.31";
 	private static final int PORT = 8080;
-//	private static final int PORT = 8686;
+	// private static final int PORT = 8686;
 	private PrintWriter pw;
 	public static Socket socket;
 	public boolean initSocket = false;
 	private ExecutorService executorService;
 	private final int POOL_SIZE = 10;
 	public String sendTem = "";
-
 
 
 	public SocketClient() {

@@ -48,6 +48,10 @@ public abstract class BaseActivity extends Activity {
 		if (socketClient == null) {
 			socketClient = new SocketClient();
 		}
+//		if (!socketClient.status()) {
+//			System.out.println("重新建立一次连接");
+//			socketClient = new SocketClient();
+//		}
 		// initBlueTooth();
 		// 如果是用模拟器，请把这个关闭
 		MobclickAgent.setDebugMode(true);
@@ -134,11 +138,18 @@ public abstract class BaseActivity extends Activity {
 					threadBlueTooth = true;
 				}
 			}
+			if (!socketClient.status()) {
+				System.out.println("重新建立一次连接吧");
+				socketClient = new SocketClient();
+				ToastMessage("服务器断开连接了,正在重新连接");
+			}
+			
 			// 如果没有通过蓝牙，那就通过socket传输
 			if (socketClient != null && !threadBlueTooth) {
 				jsonobj.put("sec", getSec());
 				socketClient.sendMessageSocket(jsonobj.toString());
 			}
+			
 		} catch (Exception e) {
 			System.out.print(e.toString());
 		}
@@ -265,6 +276,8 @@ public abstract class BaseActivity extends Activity {
 			ToastMessage("注册成功");
 		} else if (code == ConstantCode.AUTO_GET_ARDUINO_ID_SUCCESS) {
 			ToastMessage("自动获取ARDUINOID成功");
+		} else if (code == ConstantCode.RE_CONNECT_ID_SUCCESS) {
+			ToastMessage("重新连接服务器成功");
 		}
 	}
 
@@ -378,5 +391,17 @@ public abstract class BaseActivity extends Activity {
 			e.printStackTrace();
 		}
 
+	}
+
+	protected void login() {
+//		try {
+//			JSONObject jsob = new JSONObject();
+//			jsob.put("control", ConstantControl.REG_USERNAME_PASSWORD);
+//			jsob.put("username", getGameInfoStr("username"));
+//			jsob.put("password", BaseClass.MD5(getGameInfoStr("password")));
+//			sendMessage(jsob);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 	}
 }
