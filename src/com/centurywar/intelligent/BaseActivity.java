@@ -3,6 +3,9 @@ package com.centurywar.intelligent;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -42,6 +45,10 @@ public abstract class BaseActivity extends Activity {
 	public int heartSec=2000;
 //	private boolean useJpush=true;
 	private boolean useJpush=false;
+	
+	
+	//静态的发送变量，每5秒发送一次，然后有返回了把内容移除
+	private static List<JSONObject> sendArray = new ArrayList<JSONObject>();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -73,8 +80,16 @@ public abstract class BaseActivity extends Activity {
 			timer = new Timer();
 			timer.schedule(timetask, 0, 1000);
 		}
-
+		initYoumi();
+//		  OffersManager.getInstance(this).onAppLaunch(); 
+		 
+		 // SmartBanner初始化接口,在应用开启的时候调用一次即可
+//	        SmartBannerManager.init(this);
 		
+	}
+	
+	protected void initYoumi(){
+//		AdManager.getInstance(this).init("fc13c104e69f1319","bdca02f379f4f5cf", false); 
 	}
 
 	protected void setUMENGUpdate() {
@@ -138,6 +153,11 @@ public abstract class BaseActivity extends Activity {
 			if (!jsonobj.has("sec")) {
 				jsonobj.put("sec", getGameInfoStr("sec"));
 			}
+			if (!jsonobj.has("sendqueue")) {
+				Random r = new Random();
+				jsonobj.put("sendqueue", Math.abs(r.nextInt()));
+			}
+			
 			boolean threadBlueTooth = false;
 			// 这是设置板子状态的代码，优先进行蓝牙传输
 			if (jsonobj.getString("control").equals(ConstantControl.SET_STATUS)
@@ -156,14 +176,36 @@ public abstract class BaseActivity extends Activity {
 			
 			// 如果没有通过蓝牙，那就通过socket传输
 			if (socketClient != null && !threadBlueTooth) {
-				jsonobj.put("sec", getSec());
 				socketClient.sendMessageSocket(jsonobj.toString());
 			}
+			// 把要发送的指令放到发送表中，返回的时候进行处理掉
+			sendArray.add(jsonobj);
 			
 		} catch (Exception e) {
 			System.out.print(e.toString());
 		}
 
+	}
+	
+	
+
+	/**
+	 * 移除执行过的数据
+	 * 
+	 * @param id
+	 */
+	public static boolean removeMessage(int id) {
+		for (int i = 0; i < sendArray.size(); i++) {
+			try {
+				if (sendArray.get(i).getInt("queue") == id) {
+					sendArray.remove(i);
+					return true;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -258,8 +300,13 @@ public abstract class BaseActivity extends Activity {
 						ConstantControl.ECHO_CHECK_USERNAME_PASSWORD)
 						|| obj.getString("control").equals(
 								ConstantControl.GET_USER_INFO)) {
-					//这里初始化用户信息
+					// 这里初始化用户信息
 					initUserInfoFromServer(obj);
+				}
+				// 这个是处理用户发送数据及收到数据的地方
+				else if (obj.getString("control").equals(
+						ConstantControl.ECHO_SERVER_COMANDQUEUE)) {
+					echoServerStatus(obj.getInt("queue"));
 				}
 
 				MessageCallBack(obj);
@@ -359,11 +406,17 @@ public abstract class BaseActivity extends Activity {
 	};
 
 
+	public void checkSocketStatus(){
+		
+	}
 
 	/**
 	 * 在主函数哦中的回调函数，每秒调用一次
 	 */
-	protected abstract void addOneSec();
+	protected  void addOneSec(){
+		
+		
+	}
 	
 	/**
 	 * 直接发送服务器命令
@@ -432,4 +485,5 @@ public abstract class BaseActivity extends Activity {
 		}
 		return true;
 	}
+	
 }

@@ -47,6 +47,9 @@ public class ConstantControl {
 	//输出服务器的错误信息
 	public static String ECHO_SERVER_MESSAGE = "esm";
 	
+	//输出服务器已经运行过的行为
+	public static String ECHO_SERVER_COMANDQUEUE = "esc";
+	
 	// ========================传感器=========================
 	// 灯
 	public static String DEVICE_LIGTH = "10";
